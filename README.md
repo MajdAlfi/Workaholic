@@ -1,0 +1,2 @@
+# Workaholic
+Workaholic is an app with a mission to transform your body and health. The app provides detailed workout routine according to the simple information you provide.it also contains videos that explain the exercise in detail so that you would never do the exercise with a wrong form nor forget it.the app also has a streak feature where your streak will increase if you do your workout on the destined day.
