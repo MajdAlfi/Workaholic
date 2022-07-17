@@ -1,16 +1,1 @@
-# workout_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Workaholic is an app with a mission to transform your body and health. The app provides detailed workout routine according to the simple information you provide.it also contains videos that explain the exercise in detail so that you would never do the exercise with a wrong form nor forget it.the app also has a streak feature where your streak will increase if you do your workout on the destined day.
