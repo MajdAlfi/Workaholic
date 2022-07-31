@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/Screens/Videos_preview.dart';
 
 import 'DataCollector2.dart';
 
@@ -24,6 +25,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         routes: {
           '/second': (context) => DataCollector2(),
+          '/vids': (context) => vids()
         },
         home: Builder(
           builder: (context) => Scaffold(

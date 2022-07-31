@@ -149,7 +149,7 @@ class _DataCollector2State extends State<DataCollector2> {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: Color.fromARGB(255, 101, 200, 112)),
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () => Push(context),
                       child: Text(
                         "Done",
                         style: TextStyle(
@@ -165,4 +165,8 @@ class _DataCollector2State extends State<DataCollector2> {
       ),
     );
   }
+}
+
+void Push(BuildContext context) {
+  Navigator.pushReplacementNamed(context, '/vids');
 }
