@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/Screens/desc.dart';
 
 class vids extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class vids extends StatelessWidget {
                 width: 350,
                 child: ListView.separated(
                   itemCount: 10,
-                  itemBuilder: (context, index) => ExData(),
+                  itemBuilder: (context, index) => ExData(context, index),
                   separatorBuilder: (context, index) => SizedBox(
                     height: 10,
                   ),
@@ -84,70 +85,78 @@ class vids extends StatelessWidget {
   }
 }
 
-Widget ExData() {
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.all(
-        Radius.circular(20),
+Widget ExData(BuildContext context, int index) {
+  return GestureDetector(
+    onTap: (() => Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: ((context) => desc(
+                  Name: index,
+                ))))),
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+        color: gr(),
       ),
-      color: gr(),
-    ),
-    height: 220,
-    width: 220,
-    child: Column(
-      children: [
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 30.0, top: 20),
-              child: Text(
-                "Name",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-            )
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                  border: Border.all(width: 1, color: Colors.white)),
-              height: 150,
-              width: 270,
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: new BorderRadius.circular(20.0),
-                    child: Image.network(
-                      "https://i0.wp.com/post.healthline.com/wp-content/uploads/2020/07/running_at_sunset-1296x728-header.jpg?w=1155&h=1528",
-                      height: 150,
-                      width: 270,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  Center(
-                    child: Icon(
-                      Icons.play_arrow_outlined,
+      height: 220,
+      width: 220,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0, top: 20),
+                child: Text(
+                  "Name $index",
+                  style: TextStyle(
                       color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
                     ),
-                  )
-                ],
+                    border: Border.all(width: 1, color: Colors.white)),
+                height: 150,
+                width: 270,
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: new BorderRadius.circular(20.0),
+                      child: Image.network(
+                        "https://i0.wp.com/post.healthline.com/wp-content/uploads/2020/07/running_at_sunset-1296x728-header.jpg?w=1155&h=1528",
+                        height: 150,
+                        width: 270,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    Center(
+                      child: Icon(
+                        Icons.play_arrow_outlined,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
-        )
-      ],
+            ],
+          )
+        ],
+      ),
     ),
   );
 }
