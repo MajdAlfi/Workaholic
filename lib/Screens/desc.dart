@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:workout_app/Screens/Data/DataCollector1.dart';
 
 class desc extends StatelessWidget {
   const desc({Key? key, required this.Name}) : super(key: key);
@@ -70,8 +71,4 @@ class desc extends StatelessWidget {
           ],
         ));
   }
-}
-
-Color gr() {
-  return Color.fromARGB(255, 101, 200, 112);
 }

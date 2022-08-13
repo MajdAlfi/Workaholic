@@ -1,26 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/Screens/Data/DataCollector1.dart';
+import 'package:workout_app/Screens/Streak.dart';
 import 'package:workout_app/Screens/desc.dart';
 
 class vids extends StatelessWidget {
   Widget build(BuildContext context) {
+    double widthScr = MediaQuery.of(context).size.width;
+    double heightScr = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
-            Icons.menu,
+            Icons.settings,
             color: gr(),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/settings');
+          },
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 15.0, top: 10),
-            child: Text(
-              "0🔥",
-              style: TextStyle(color: gr(), fontWeight: FontWeight.bold),
-            ),
+          TextButton(
+            child: Text("0🔥",
+                style: TextStyle(color: gr(), fontWeight: FontWeight.bold)),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Streak(),
+              ));
+            },
           )
         ],
       ),
@@ -29,54 +37,58 @@ class vids extends StatelessWidget {
         children: [
           Column(
             children: [
-              Text(
-                "Day 1",
-                style: TextStyle(color: gr(), fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "Chest & Biceps",
-                style: TextStyle(color: gr(), fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Text(
+                    "Day 1/ ",
+                    style: TextStyle(color: gr(), fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Chest & Biceps",
+                    style: TextStyle(color: gr(), fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30.0),
+                    child: Container(
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        color: gr(),
+                      ),
+                      child: TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "Done ✓",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600),
+                          )),
+                    ),
+                  )
+                ],
               ),
               SizedBox(
                 height: 20,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                ),
-                height: 600,
-                width: 350,
-                child: ListView.separated(
-                  itemCount: 10,
-                  itemBuilder: (context, index) => ExData(context, index),
-                  separatorBuilder: (context, index) => SizedBox(
-                    height: 10,
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                  ),
+                  width: widthScr - 30,
+                  child: ListView.separated(
+                    itemCount: 10,
+                    itemBuilder: (context, index) => ExData(context, index),
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 10,
+                    ),
                   ),
                 ),
               ),
               SizedBox(
                 height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 288.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        bottomLeft: Radius.circular(30)),
-                    color: gr(),
-                  ),
-                  child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Next Day😍",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600),
-                      )),
-                ),
-              )
             ],
           ),
         ],
@@ -159,8 +171,4 @@ Widget ExData(BuildContext context, int index) {
       ),
     ),
   );
-}
-
-Color gr() {
-  return Color.fromARGB(255, 101, 200, 112);
 }

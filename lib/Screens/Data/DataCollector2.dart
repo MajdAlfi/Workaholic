@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/Screens/Data/DataCollector1.dart';
 
 class DataCollector2 extends StatefulWidget {
   @override
@@ -50,7 +51,7 @@ class _DataCollector2State extends State<DataCollector2> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Color.fromARGB(255, 101, 200, 112),
+            color: gr(),
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -70,9 +71,7 @@ class _DataCollector2State extends State<DataCollector2> {
                 child: Text(
                   "Goal",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 101, 200, 112),
-                      fontSize: 20),
+                      fontWeight: FontWeight.bold, color: gr(), fontSize: 20),
                 ),
               ),
               SizedBox(
@@ -82,7 +81,7 @@ class _DataCollector2State extends State<DataCollector2> {
                   width: 320,
                   height: 50,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 101, 200, 112),
+                      color: gr(),
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -94,7 +93,7 @@ class _DataCollector2State extends State<DataCollector2> {
                         hint: Text("Select your Goal"),
                         value: DefaultG,
                         borderRadius: BorderRadius.all(Radius.circular(20)),
-                        dropdownColor: Color.fromARGB(255, 101, 200, 112),
+                        dropdownColor: gr(),
                         onChanged: (String? newValue) {
                           setState(() {
                             DefaultG = newValue!;
@@ -106,9 +105,7 @@ class _DataCollector2State extends State<DataCollector2> {
                 child: Text(
                   "Experience",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 101, 200, 112),
-                      fontSize: 20),
+                      fontWeight: FontWeight.bold, color: gr(), fontSize: 20),
                 ),
               ),
               SizedBox(
@@ -118,7 +115,7 @@ class _DataCollector2State extends State<DataCollector2> {
                   width: 320,
                   height: 50,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 101, 200, 112),
+                      color: gr(),
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -130,7 +127,7 @@ class _DataCollector2State extends State<DataCollector2> {
                         hint: Text("Select your Experience Level"),
                         value: DefaultE,
                         borderRadius: BorderRadius.all(Radius.circular(20)),
-                        dropdownColor: Color.fromARGB(255, 101, 200, 112),
+                        dropdownColor: gr(),
                         onChanged: (String? newValue) {
                           setState(() {
                             DefaultE = newValue!;
@@ -147,7 +144,7 @@ class _DataCollector2State extends State<DataCollector2> {
                   width: 120,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
-                      color: Color.fromARGB(255, 101, 200, 112)),
+                      color: gr()),
                   child: TextButton(
                       onPressed: () => Push(context),
                       child: Text(
