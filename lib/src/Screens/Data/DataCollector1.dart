@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/Screens/Auth/Login.dart';
-import 'package:workout_app/Screens/Auth/Signup.dart';
-import 'package:workout_app/Screens/Settings.dart';
-import 'package:workout_app/Screens/Videos_preview.dart';
-import 'package:workout_app/Screens/desc.dart';
+import 'package:provider/provider.dart';
+import 'package:workout_app/src/Screens/Auth/Login.dart';
+import 'package:workout_app/src/Screens/Auth/Signup.dart';
+import 'package:workout_app/src/Screens/interface/Settings.dart';
+import 'package:workout_app/src/Screens/interface/Videos_preview.dart';
+import 'package:workout_app/src/Screens/interface/desc.dart';
+import 'package:workout_app/src/Services/dataProvider.dart';
 
 import 'DataCollector2.dart';
 
@@ -23,7 +25,9 @@ class _MyAppState extends State<MyApp> {
         value: limitX);
   }).toList();
   var DefaultG = "Select your Gender";
-
+  final AgeValue = TextEditingController();
+  final WeightValue = TextEditingController();
+  final HeightValue = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +74,7 @@ class _MyAppState extends State<MyApp> {
                 width: 320,
                 height: 50,
                 child: TextField(
+                  controller: AgeValue,
                   keyboardType: TextInputType.number,
                   autofocus: false,
                   style: TextStyle(color: Colors.white),
@@ -104,6 +109,7 @@ class _MyAppState extends State<MyApp> {
                 width: 320,
                 height: 50,
                 child: TextField(
+                  controller: WeightValue,
                   keyboardType: TextInputType.number,
                   autofocus: false,
                   style: TextStyle(color: Colors.white),
@@ -138,6 +144,7 @@ class _MyAppState extends State<MyApp> {
                 width: 320,
                 height: 50,
                 child: TextField(
+                  controller: HeightValue,
                   keyboardType: TextInputType.number,
                   autofocus: false,
                   style: TextStyle(color: Colors.white),
@@ -203,7 +210,22 @@ class _MyAppState extends State<MyApp> {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: gr()),
                   child: TextButton(
-                      onPressed: () => Push(context),
+                      onPressed: () {
+                        if (AgeValue.text == '' ||
+                            WeightValue.text == '' ||
+                            HeightValue.text == '' ||
+                            DefaultG == 'Select your Gender') {
+                          showAlertDialog(
+                              context, 'Please fill in the required Data');
+                        } else {
+                          checkData(
+                              context,
+                              int.parse(AgeValue.text),
+                              int.parse(WeightValue.text),
+                              int.parse(HeightValue.text),
+                              DefaultG);
+                        }
+                      },
                       child: Text(
                         "Next",
                         style: TextStyle(
@@ -227,4 +249,45 @@ void Push(BuildContext context) {
 
 Color gr() {
   return Color.fromARGB(255, 52, 165, 118);
+}
+
+checkData(
+    BuildContext context, int Age, int Weight, int Height, String Gender) {
+  if ((Age > 0 && Age < 100) &&
+      (Weight > 0 && Weight < 300) &&
+      (Height > 0 && Height < 250) &&
+      (Gender == 'Male' || Gender == 'Female')) {
+    Provider.of<dataProvider>(context, listen: false)
+        .uploadUserData(Age, Weight, Height, Gender);
+    Navigator.pushNamed(context, '/Second');
+  } else {
+    showAlertDialog(context, 'Please Enter a reasonable data');
+  }
+}
+
+showAlertDialog(BuildContext context, String x) {
+  // Create button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  // Create AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Alert!"),
+    content: Text(x),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

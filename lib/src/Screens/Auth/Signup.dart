@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:workout_app/Screens/Data/DataCollector1.dart';
+import 'package:provider/provider.dart';
+import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
+import 'package:workout_app/src/Services/dataProvider.dart';
 
 class Signup extends StatelessWidget {
   const Signup({Key? key}) : super(key: key);
@@ -10,6 +14,9 @@ class Signup extends StatelessWidget {
   Widget build(BuildContext context) {
     double widthScr = MediaQuery.of(context).size.width;
     double heightScr = MediaQuery.of(context).size.height;
+    final nameField = TextEditingController();
+    final emailField = TextEditingController();
+    final passField = TextEditingController();
     return Scaffold(
         body: Stack(
       children: [
@@ -60,6 +67,7 @@ class Signup extends StatelessWidget {
                       width: 280,
                       height: 50,
                       child: TextField(
+                        controller: nameField,
                         autofocus: false,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
@@ -85,6 +93,7 @@ class Signup extends StatelessWidget {
                       width: 280,
                       height: 50,
                       child: TextField(
+                        controller: emailField,
                         autofocus: false,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
@@ -110,6 +119,7 @@ class Signup extends StatelessWidget {
                       width: 280,
                       height: 50,
                       child: TextField(
+                        controller: passField,
                         obscureText: true,
                         autofocus: false,
                         style: TextStyle(color: Colors.white),
@@ -147,7 +157,8 @@ class Signup extends StatelessWidget {
                                 fontSize: 15),
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/First');
+                            signupFunc(
+                                context, nameField, emailField, passField);
                           },
                         ),
                       ))
@@ -157,4 +168,46 @@ class Signup extends StatelessWidget {
       ],
     ));
   }
+}
+
+Future<void> signupFunc(BuildContext context, TextEditingController Name,
+    TextEditingController Email, TextEditingController Pass) async {
+  RegExp emailRegExp = RegExp(
+      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+  if (Name.text == '' || Email.text == '' || Pass.text == '') {
+    showAlertDialog(context, 'Please fill in the required data');
+  } else if (!emailRegExp.hasMatch(Email.text)) {
+    showAlertDialog(context, 'Please Enter a valid Email');
+  } else {
+    Provider.of<dataProvider>(context, listen: false)
+        .changeDataPro(Name.text, Email.text, Pass.text);
+    Navigator.pushNamed(context, '/First');
+  }
+}
+
+showAlertDialog(BuildContext context, String x) {
+  // Create button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  // Create AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Alert!"),
+    content: Text(x),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

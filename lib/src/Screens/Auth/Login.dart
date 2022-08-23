@@ -1,12 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:workout_app/Screens/Data/DataCollector1.dart';
+import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
 import 'package:workout_app/main.dart';
+import 'package:workout_app/src/Services/Signup&LoginFunc.dart';
 
 class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
-
+  Login({Key? key}) : super(key: key);
+  final emailField = TextEditingController();
+  final passwordField = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double widthScr = MediaQuery.of(context).size.width;
@@ -66,6 +69,7 @@ class Login extends StatelessWidget {
                       width: 280,
                       height: 50,
                       child: TextField(
+                        controller: emailField,
                         autofocus: false,
                         style: TextStyle(color: gr()),
                         decoration: InputDecoration(
@@ -91,6 +95,7 @@ class Login extends StatelessWidget {
                       width: 280,
                       height: 50,
                       child: TextField(
+                        controller: passwordField,
                         obscureText: true,
                         autofocus: false,
                         style: TextStyle(color: gr()),
@@ -128,7 +133,7 @@ class Login extends StatelessWidget {
                                 fontSize: 15),
                           ),
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/vids');
+                            loginFunc(context, emailField, passwordField);
                           },
                         ),
                       ))
