@@ -24,7 +24,7 @@ Future<User?> signupAuth(
         await auth.createUserWithEmailAndPassword(email: Email, password: Pass);
     Navigator.pushNamed(context, '/vids');
     await addSignupDataDB(
-        Name, Email, Age, Weight, Height, Level, Gender, Goal, Exp);
+        Name, Email, Age, Weight, Height, Level, 0, 0, Gender, Goal, Exp);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('uid', userCredential.user!.uid);
     user = userCredential.user;

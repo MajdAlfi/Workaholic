@@ -3,6 +3,7 @@ import 'package:flutter/src/material/input_decorator.dart';
 import 'package:flutter/src/rendering/box.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workout_app/src/Screens/Auth/Forgot.dart';
 import 'package:workout_app/src/Screens/Auth/Login.dart';
 import 'package:workout_app/src/Services/dataProvider.dart';
 import 'src/Screens/Auth/Signup.dart';
@@ -35,5 +36,6 @@ void main() async {
         '/settings': (context) => Settings(),
         '/Signup': (context) => Signup(),
         '/Login': (context) => Login(),
+        '/Forgot': (context) => forgot(),
       }, home: Home)));
 }

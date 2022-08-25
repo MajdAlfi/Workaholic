@@ -12,13 +12,8 @@ class DataCollector2 extends StatefulWidget {
 }
 
 class _DataCollector2State extends State<DataCollector2> {
-  var Goal = [
-    "Select your Goal",
-    "Body Building",
-    "Weight Loss",
-    "Power Lifting",
-    "Cross Fit"
-  ].map<DropdownMenuItem<String>>((String limitX) {
+  var Goal = ["Select your Goal", "Body Building", "Weight Loss", "Both"]
+      .map<DropdownMenuItem<String>>((String limitX) {
     return DropdownMenuItem(
         child: Text(
           limitX,

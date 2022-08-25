@@ -14,6 +14,8 @@ Future<userData> addSignupDataDB(
     int WeightX,
     int HeightX,
     int LevelX,
+    int StreakX,
+    int rankX,
     String GenderX,
     String GoalX,
     String ExpX) async {
@@ -24,6 +26,8 @@ Future<userData> addSignupDataDB(
       Weight: WeightX,
       Height: HeightX,
       Level: LevelX,
+      Streak: StreakX,
+      Rank: rankX,
       Gender: GenderX,
       Goal: GoalX,
       Experience: ExpX);

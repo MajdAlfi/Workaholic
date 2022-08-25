@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,6 +56,10 @@ class _vidsState extends State<vids> {
   }
 
   Widget build(BuildContext context) {
+    final fire = FirebaseFirestore.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final Uid = user?.uid;
     int? _counter = context.read<dataProvider>().theDay;
     print(_counter);
     //  gettheDayData(context);
@@ -76,13 +79,29 @@ class _vidsState extends State<vids> {
           },
         ),
         actions: [
-          TextButton(
-            child: Text("0🔥",
-                style: TextStyle(color: gr(), fontWeight: FontWeight.bold)),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => Streak(),
-              ));
+          StreamBuilder(
+            stream: fire.collection('Users').doc(Uid).snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                Text(snapshot.error.toString());
+              } else if (snapshot.data == null) {
+                return Text('no Data');
+              } else if (snapshot.hasData) {
+                streakGet(fire, Uid, context);
+                return TextButton(
+                  child: Text("${context.read<dataProvider>().theStreak}🔥",
+                      style:
+                          TextStyle(color: gr(), fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Streak(),
+                    ));
+                  },
+                );
+              }
+              return Text('Error Occured');
             },
           )
         ],
@@ -163,6 +182,9 @@ class _vidsState extends State<vids> {
                       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                         stream: widget.fireStoreH
                             .collection('Levels')
+                            .where('Level',
+                                isEqualTo:
+                                    context.read<dataProvider>().theLevel)
                             .where('day', isEqualTo: _counter)
                             .snapshots(),
                         builder: (context, snapshot) {
@@ -358,4 +380,16 @@ getTheName(uid, BuildContext context) async {
       dataX.Streak,
       dataX.Rank,
       dataX.Level);
+}
+
+streakGet(fire, Uid, context) async {
+  Future streakData =
+      fire.collection('Users').doc(Uid).get().then((DocumentSnapshot value) {
+    if (value.exists) {
+      return value.get('Streak');
+    }
+  });
+  int streakCount = await streakData;
+  Provider.of<dataProvider>(context, listen: false)
+      .ExtraDataStreak(streakCount);
 }

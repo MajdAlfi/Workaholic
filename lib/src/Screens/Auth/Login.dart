@@ -136,7 +136,19 @@ class Login extends StatelessWidget {
                             loginFunc(context, emailField, passwordField);
                           },
                         ),
-                      ))
+                      )),
+                  Positioned(
+                    top: (heightScr * 0.5) + 110,
+                    left: widthScr * 0.5 - 170,
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/Forgot');
+                        },
+                        child: Text(
+                          'Forgot your password?',
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  )
                 ],
               )),
         ),

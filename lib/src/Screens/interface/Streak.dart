@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,12 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
 import 'package:workout_app/src/Screens/interface/Videos_preview.dart';
 import 'package:workout_app/src/Screens/interface/desc.dart';
+import 'package:workout_app/src/Services/SignupSer.dart';
 import 'package:workout_app/src/Services/dataProvider.dart';
 
 class Streak extends StatefulWidget {
   Streak({Key? key}) : super(key: key);
-  late int index = 0;
+
   @override
   State<Streak> createState() => _StreakState();
 }
@@ -19,16 +21,14 @@ class Streak extends StatefulWidget {
 class _StreakState extends State<Streak> {
   @override
   Widget build(BuildContext context) {
+    final fire = FirebaseFirestore.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final Uid = user?.uid;
     double heightScr = MediaQuery.of(context).size.height;
     double widthScr = MediaQuery.of(context).size.width;
-    void intit() {
-      super.initState();
-      setState(() async {
-        widget.index =
-            await int.parse(context.read<dataProvider>().theRank.toString());
-      });
-    }
-
+    // rankChange(context, context.read<dataProvider>().theEmail.toString(),
+    //     widget.index);
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -48,37 +48,25 @@ class _StreakState extends State<Streak> {
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(10),
                         bottomRight: Radius.circular(10))),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: (widthScr * 0.1) + 10,
-                      top: 30,
-                      child: Text(
-                        "Rank:",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                            color: Colors.white),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.topCenter,
-                        child: ranktxt(widget.index)),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10.0),
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          context.read<dataProvider>().theName.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                              color: Colors.white),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
+                child: StreamBuilder(
+                  stream: fire.collection('Users').doc(Uid).snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      Text(snapshot.error.toString());
+                    } else if (snapshot.data == null) {
+                      return Text('no Data');
+                    } else if (snapshot.hasData) {
+                      return stackRank(context, widthScr,
+                          context.read<dataProvider>().theRank as int);
+                    }
+                    return Text('Uknown Error');
+                  },
+                )
+
+                //Provider.of<dataProvider>(context, listen: false).ExtraDataRank(count);,
+                ),
             Expanded(
                 child: Container(
                     child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -97,6 +85,17 @@ class _StreakState extends State<Streak> {
                   return ListView.separated(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
+                      if (context.read<dataProvider>().theEmail ==
+                          snapshot.data!.docs[index].data()['Email']) {
+                        fire
+                            .collection('Users')
+                            .doc(Uid)
+                            .update({'Rank': index + 1});
+
+                        getValue(context, index + 1);
+
+                        //         print(nums.skip(index - 3).take(index + 4));
+                      }
                       return tile(
                           snapshot.data!.docs[index].data()['Email'],
                           index + 1,
@@ -115,7 +114,7 @@ class _StreakState extends State<Streak> {
                     // ListView.builder(
                     //     itemBuilder: (context, index) => tile(rank, "Majd"),
                     //     itemCount: 10),
-                    ))
+                    )),
           ],
         ));
   }
@@ -183,7 +182,6 @@ ListTile tile(Email, int rank, String name, int streak, BuildContext context) {
 
 Text NameTxt(Email, String name, BuildContext context, int index) {
   if (context.read<dataProvider>().theEmail == Email) {
-    rankChange(context, Email, index);
     return Text(
       '$name',
       style: TextStyle(color: gr(), fontSize: 15, fontWeight: FontWeight.bold),
@@ -193,9 +191,41 @@ Text NameTxt(Email, String name, BuildContext context, int index) {
   }
 }
 
-rankChange(BuildContext context, String Email, int index) async {
+Future rankChange(BuildContext context, int index) async {
+  Provider.of<dataProvider>(context, listen: false).ExtraDataRank(index);
+  print(context.read<dataProvider>().theRank);
+}
+
+getValue(context, int index) async {
   Future.delayed(Duration.zero, () {
     Provider.of<dataProvider>(context, listen: false).ExtraDataRank(index);
-    print(context.read<dataProvider>().theRank);
   });
+}
+
+Widget stackRank(BuildContext context, widthScr, int rank) {
+  return Stack(
+    children: [
+      Positioned(
+        left: (widthScr * 0.1) + 10,
+        top: 30,
+        child: Text(
+          "Rank:",
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 25, color: Colors.white),
+        ),
+      ),
+      Align(alignment: Alignment.topCenter, child: ranktxt(rank)),
+      Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Text(
+            context.read<dataProvider>().theName.toString(),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 25, color: Colors.white),
+          ),
+        ),
+      )
+    ],
+  );
 }
