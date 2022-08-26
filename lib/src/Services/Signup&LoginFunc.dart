@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_app/src/Services/SignupSer.dart';
+import 'package:workout_app/src/Services/analyze.dart';
 
 Future<User?> signupAuth(
     BuildContext context,
@@ -22,15 +24,19 @@ Future<User?> signupAuth(
   try {
     UserCredential userCredential =
         await auth.createUserWithEmailAndPassword(email: Email, password: Pass);
-    Navigator.pushNamed(context, '/vids');
+
     await addSignupDataDB(
         Name, Email, Age, Weight, Height, Level, 0, 0, Gender, Goal, Exp);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('uid', userCredential.user!.uid);
+    prefs.setString('Tmr', DateTime.now().toString());
+    prefs.setBool('bool', true);
+    await analyze(Goal, Exp, uid, Gender, Age);
     user = userCredential.user;
     await user?.updateDisplayName(Name);
     await user?.reload();
     user = auth.currentUser;
+    delayPushU(context);
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
       showAlertDialog(context, "The password provided is too weak.");
@@ -59,6 +65,8 @@ Future<void> loginFunc(BuildContext context, TextEditingController email,
           email: email.text, password: Pass.text);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('uid', userCredential.user!.uid);
+      prefs.setString('Tmr', DateTime.now().toString());
+      prefs.setBool('bool', true);
       delayPushU(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -71,34 +79,33 @@ Future<void> loginFunc(BuildContext context, TextEditingController email,
 }
 
 Future delayPushU(BuildContext context) async {
-  await new Future.delayed(new Duration(milliseconds: 1500), () {
+  await new Future.delayed(new Duration(milliseconds: 500), () {
     Navigator.pushReplacementNamed(context, '/vids');
   });
 }
 
 showAlertDialog(BuildContext context, String x) {
-  // Create button
-  Widget okButton = TextButton(
-    child: Text("OK"),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
-
-  // Create AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("Alert!"),
-    content: Text(x),
-    actions: [
-      okButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
+  showCupertinoDialog(
     context: context,
-    builder: (BuildContext context) {
-      return alert;
+    builder: (context) {
+      return CupertinoAlertDialog(
+        title: Text("Alert"),
+        content: Text(x),
+        actions: [
+          CupertinoDialogAction(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+          //  CupertinoDialogAction(
+          //    child: Text("NO"),
+          //    onPressed: (){
+          //      Navigator.of(context).pop();
+          //    }
+          //    ,
+          //  )
+        ],
+      );
     },
   );
 }

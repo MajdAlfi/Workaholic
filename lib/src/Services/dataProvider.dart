@@ -36,10 +36,16 @@ class dataProvider<userData> with ChangeNotifier {
     notifyListeners();
   }
 
-  uploadSecondData<userData>(String Goal, String Experience, int Level) {
+  uploadSecondData<userData>(String Goal, String Experience, int level) {
     theGoal = Goal;
     theExperience = Experience;
+    theLevel = level;
+    notifyListeners();
+  }
+
+  uploadLevel<userData>(int Level) {
     theLevel = Level;
+    notifyListeners();
   }
 
   ExtraDataStreak<userData>(int Streak) {

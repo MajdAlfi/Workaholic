@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -103,28 +104,27 @@ Future resetPassword(
 }
 
 showAlertDialog(BuildContext context, String x) {
-  // Create button
-  Widget okButton = TextButton(
-    child: Text("OK"),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
-
-  // Create AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("Alert!"),
-    content: Text(x),
-    actions: [
-      okButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
+  showCupertinoDialog(
     context: context,
-    builder: (BuildContext context) {
-      return alert;
+    builder: (context) {
+      return CupertinoAlertDialog(
+        title: Text("Alert"),
+        content: Text(x),
+        actions: [
+          CupertinoDialogAction(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+          //  CupertinoDialogAction(
+          //    child: Text("NO"),
+          //    onPressed: (){
+          //      Navigator.of(context).pop();
+          //    }
+          //    ,
+          //  )
+        ],
+      );
     },
   );
 }

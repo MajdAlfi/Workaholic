@@ -41,9 +41,12 @@ class Settings extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/Login');
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.remove('uid');
+                prefs.remove('counter');
+                prefs.reload();
                 Provider.of<dataProvider>(context, listen: false)
                     .changeTheDay(1);
                 await FirebaseAuth.instance.signOut();
+                prefs.clear();
               },
               child: Container(
                 height: 30,

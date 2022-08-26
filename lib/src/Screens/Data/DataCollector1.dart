@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/src/Screens/Auth/Login.dart';
@@ -253,7 +254,7 @@ Color gr() {
 
 checkData(
     BuildContext context, int Age, int Weight, int Height, String Gender) {
-  if ((Age > 0 && Age < 100) &&
+  if ((Age >= 16 && Age < 100) &&
       (Weight > 0 && Weight < 300) &&
       (Height > 0 && Height < 250) &&
       (Gender == 'Male' || Gender == 'Female')) {
@@ -266,28 +267,27 @@ checkData(
 }
 
 showAlertDialog(BuildContext context, String x) {
-  // Create button
-  Widget okButton = TextButton(
-    child: Text("OK"),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
-
-  // Create AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("Alert!"),
-    content: Text(x),
-    actions: [
-      okButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
+  showCupertinoDialog(
     context: context,
-    builder: (BuildContext context) {
-      return alert;
+    builder: (context) {
+      return CupertinoAlertDialog(
+        title: Text("Alert"),
+        content: Text(x),
+        actions: [
+          CupertinoDialogAction(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+          //  CupertinoDialogAction(
+          //    child: Text("NO"),
+          //    onPressed: (){
+          //      Navigator.of(context).pop();
+          //    }
+          //    ,
+          //  )
+        ],
+      );
     },
   );
 }

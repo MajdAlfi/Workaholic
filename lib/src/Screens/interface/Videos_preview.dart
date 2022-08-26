@@ -1,11 +1,12 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_app/src/Models/dataModel.dart';
@@ -30,6 +31,7 @@ class _vidsState extends State<vids> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     final uid = user?.uid;
+
     setState(() {
       getTheName(uid, context);
     });
@@ -43,6 +45,7 @@ class _vidsState extends State<vids> {
 
   void dispose() {
     _loadCounter();
+
     getTheName(uid, context);
     super.dispose();
   }
@@ -51,7 +54,7 @@ class _vidsState extends State<vids> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       Provider.of<dataProvider>(context, listen: false)
-          .changeTheDay(prefs.getInt('counter') ?? 0);
+          .changeTheDay(prefs.getInt('counter') ?? 1);
     });
   }
 
@@ -60,6 +63,7 @@ class _vidsState extends State<vids> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     final Uid = user?.uid;
+
     int? _counter = context.read<dataProvider>().theDay;
     print(_counter);
     //  gettheDayData(context);
@@ -114,7 +118,7 @@ class _vidsState extends State<vids> {
               Row(
                 children: [
                   Text(
-                    "Day $_counter/ ",
+                    "Day $_counter || ",
                     style: TextStyle(color: gr(), fontWeight: FontWeight.bold),
                   ),
                   Text(
@@ -130,34 +134,47 @@ class _vidsState extends State<vids> {
                         color: gr(),
                       ),
                       child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              if (_counter != null) {
-                                checkDay(_counter, context);
-                              }
-                              //   if (dayX == null) {
-                              //     Provider.of<dataProvider>(context,
-                              //             listen: false)
-                              //         .changeTheDay(1);
-                              //     updateDay(int.parse(dayX.toString()));
-                              //     print('First');
-                              //   } else if (dayX == 7) {
-                              //     Provider.of<dataProvider>(context,
-                              //             listen: false)
-                              //         .changeTheDay(1);
+                          onPressed: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
 
-                              //     updateDay(int.parse(dayX.toString()));
-                              //     print('second');
-                              //   } else {
-                              //     if (dayX != null) {
-                              //       Provider.of<dataProvider>(context,
-                              //               listen: false)
-                              //           .changeTheDay((dayX + 1));
-                              //       updateDay(int.parse(dayX.toString()));
-                              //       print(int.parse(dayX.toString()));
-                              //     }
-                              //   }
-                            });
+                            if (await getTheDate(prefs) == true) {
+                              prefs.setBool('bool', true);
+                            }
+                            if (prefs.getBool('bool') == true) {
+                              if (_counter != null) {
+                                if (await showAlertDialog(context,
+                                        'Are you sure you completed the entire workout?') ==
+                                    true) {
+                                  setState(() {
+                                    checkDay(_counter, context);
+
+                                    fire.collection('Users').doc(Uid).update({
+                                      'Streak': (context
+                                              .read<dataProvider>()
+                                              .theStreak! +
+                                          1)
+                                    });
+                                    Provider.of<dataProvider>(context,
+                                            listen: false)
+                                        .ExtraDataStreak(context
+                                                .read<dataProvider>()
+                                                .theStreak! +
+                                            1);
+                                    prefs.setBool('bool', false);
+                                  });
+
+                                  DateTime now = DateTime.now();
+                                  prefs.setString(
+                                      'Tmr',
+                                      DateTime(now.year, now.month, now.day + 1)
+                                          .toString());
+                                }
+                              }
+                            } else {
+                              showAlertDialog2(
+                                  context, 'Please come back tomowrow');
+                            }
                           },
                           child: Text(
                             "Done ✓",
@@ -360,7 +377,6 @@ getTheName(uid, BuildContext context) async {
   FirebaseFirestore fire = FirebaseFirestore.instance;
   userData dataU;
   final user = fire.collection('Users').doc(uid);
-
   Future USERData = user.get().then((DocumentSnapshot event) {
     dataU = userData.fromMap(event.data() as Map<String, dynamic>);
 
@@ -392,4 +408,72 @@ streakGet(fire, Uid, context) async {
   int streakCount = await streakData;
   Provider.of<dataProvider>(context, listen: false)
       .ExtraDataStreak(streakCount);
+}
+
+showAlertDialog(BuildContext context, String x) async {
+  bool result = false;
+  await showCupertinoDialog(
+    context: context,
+    builder: (context) {
+      return CupertinoAlertDialog(
+        title: Text("Alert"),
+        content: Text(x),
+        actions: [
+          CupertinoDialogAction(
+              child: Text("Yes"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                result = true;
+              }),
+          CupertinoDialogAction(
+            child: Text("NO"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              result = false;
+            },
+          )
+        ],
+      );
+    },
+  );
+  return result;
+}
+
+showAlertDialog2(BuildContext context, String x) async {
+  await showCupertinoDialog(
+    context: context,
+    builder: (context) {
+      return CupertinoAlertDialog(
+        title: Text("Alert"),
+        content: Text(x),
+        actions: [
+          CupertinoDialogAction(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+        ],
+      );
+    },
+  );
+}
+
+bool getTheDate(prefs) {
+  DateTime now = DateTime.now();
+  bool result = false;
+  if (DateTime.parse(prefs.getString('Tmr')!).compareTo(DateTime.now()) < 0) {
+    result = true;
+    return result;
+  } else {
+    print(false);
+  }
+  return result;
+}
+
+Color ButtonColor(prefs) {
+  if (prefs.getBool('bool') == true) {
+    return gr();
+  } else {
+    return Colors.grey;
+  }
 }
