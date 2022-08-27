@@ -27,31 +27,32 @@ class vids extends StatefulWidget {
 
 class _vidsState extends State<vids> {
   void initState() {
+    super.initState();
     _loadCounter();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     final uid = user?.uid;
-
     setState(() {
       getTheName(uid, context);
     });
-
     // final docData = FirebaseFirestore.instance
     //   .collection('Levels')
     //   .get()
     //   .then((DocumentSnapshot value) { print(value.get())});
-    super.initState();
   }
 
   void dispose() {
-    _loadCounter();
-
-    getTheName(uid, context);
     super.dispose();
+    _loadCounter();
+    setState(() {
+      getTheName(uid, context);
+    });
   }
 
   Future<void> _loadCounter() async {
     final prefs = await SharedPreferences.getInstance();
+    Provider.of<dataProvider>(context, listen: false)
+        .uploadLevel(await getIt());
     setState(() {
       Provider.of<dataProvider>(context, listen: false)
           .changeTheDay(prefs.getInt('counter') ?? 1);
@@ -83,7 +84,7 @@ class _vidsState extends State<vids> {
           },
         ),
         actions: [
-          StreamBuilder(
+          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             stream: fire.collection('Users').doc(Uid).snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -94,8 +95,9 @@ class _vidsState extends State<vids> {
                 return Text('no Data');
               } else if (snapshot.hasData) {
                 streakGet(fire, Uid, context);
+
                 return TextButton(
-                  child: Text("${context.read<dataProvider>().theStreak}🔥",
+                  child: Text("${context.watch<dataProvider>().theStreak}🔥",
                       style:
                           TextStyle(color: gr(), fontWeight: FontWeight.bold)),
                   onPressed: () {
@@ -399,8 +401,11 @@ getTheName(uid, BuildContext context) async {
 }
 
 streakGet(fire, Uid, context) async {
-  Future streakData =
-      fire.collection('Users').doc(Uid).get().then((DocumentSnapshot value) {
+  Future streakData = fire
+      .collection('Users')
+      .doc(Uid)
+      .get()
+      .then((DocumentSnapshot value) async {
     if (value.exists) {
       return value.get('Streak');
     }
@@ -476,4 +481,12 @@ Color ButtonColor(prefs) {
   } else {
     return Colors.grey;
   }
+}
+
+getIt() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  int x = prefs.getInt('Level')!;
+
+  return x;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/src/material/input_decorator.dart';
 import 'package:flutter/src/rendering/box.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ void main() async {
   } else {
     Home = Login();
   }
+
   runApp(MultiProvider(
       providers: [ChangeNotifierProvider(create: (context) => dataProvider())],
       child: MaterialApp(routes: {

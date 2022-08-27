@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ Future<User?> signupAuth(
     prefs.setString('uid', userCredential.user!.uid);
     prefs.setString('Tmr', DateTime.now().toString());
     prefs.setBool('bool', true);
-    await analyze(Goal, Exp, uid, Gender, Age);
+    await analyze(Goal, Exp, uid, Gender, Age, prefs);
     user = userCredential.user;
     await user?.updateDisplayName(Name);
     await user?.reload();
@@ -59,6 +60,7 @@ Future<void> loginFunc(BuildContext context, TextEditingController email,
     showAlertDialog(context, "Enter a valid Email");
   } else {
     FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseFirestore fire = FirebaseFirestore.instance;
     User user;
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
@@ -67,6 +69,9 @@ Future<void> loginFunc(BuildContext context, TextEditingController email,
       prefs.setString('uid', userCredential.user!.uid);
       prefs.setString('Tmr', DateTime.now().toString());
       prefs.setBool('bool', true);
+      //TODO: add the level when logining in
+
+      // await prefs.setInt('Level',)
       delayPushU(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
