@@ -3,7 +3,7 @@ Workaholic is an app with a mission to transform your body and health. The app p
 
 - [x] Add a screen asking about (Age, height, weight, gender) with a next button
 - [x] Add another screen asking about (Goal, Experience) with A done button
-- [ ] Create an algorithm to process and classify the user according to the data he/she entered 
+- [x] Create an algorithm to process and classify the user according to the data he/she entered 
 - [x] Add a Third screen that shows the workouts classified to that user with exercise name and a video thumbnail , a streak showing at the top and a next day button 
 - [x] The forth screen, After selecting the exercise a screen will pop up and show the video with detailed description underneath it  
 
