@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_app/src/Services/SignupSer.dart';
 import 'package:workout_app/src/Services/analyze.dart';
+import 'package:workout_app/src/Services/dataProvider.dart';
 
 Future<User?> signupAuth(
     BuildContext context,
@@ -32,6 +34,7 @@ Future<User?> signupAuth(
     prefs.setString('uid', userCredential.user!.uid);
     prefs.setString('Tmr', DateTime.now().toString());
     prefs.setBool('bool', true);
+    Provider.of<dataProvider>(context, listen: false).ExtraDataStreak(0);
     await analyze(Goal, Exp, uid, Gender, Age, prefs);
     user = userCredential.user;
     await user?.updateDisplayName(Name);
@@ -69,6 +72,9 @@ Future<void> loginFunc(BuildContext context, TextEditingController email,
       prefs.setString('uid', userCredential.user!.uid);
       prefs.setString('Tmr', DateTime.now().toString());
       prefs.setBool('bool', true);
+
+      user = userCredential.user!;
+      await user.reload();
       //TODO: add the level when logining in
 
       // await prefs.setInt('Level',)
@@ -84,7 +90,7 @@ Future<void> loginFunc(BuildContext context, TextEditingController email,
 }
 
 Future delayPushU(BuildContext context) async {
-  await new Future.delayed(new Duration(milliseconds: 500), () {
+  await new Future.delayed(new Duration(milliseconds: 1500), () {
     Navigator.pushReplacementNamed(context, '/vids');
   });
 }

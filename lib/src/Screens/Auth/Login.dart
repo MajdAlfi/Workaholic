@@ -70,7 +70,6 @@ class Login extends StatelessWidget {
                       height: 50,
                       child: TextField(
                         controller: emailField,
-                        autofocus: false,
                         style: TextStyle(color: gr()),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -84,7 +83,7 @@ class Login extends StatelessWidget {
                               color: gr(),
                             ),
                             fillColor: Colors.white),
-                        cursorColor: Colors.white,
+                        cursorColor: gr(),
                       ),
                     ),
                   ),
@@ -97,7 +96,6 @@ class Login extends StatelessWidget {
                       child: TextField(
                         controller: passwordField,
                         obscureText: true,
-                        autofocus: false,
                         style: TextStyle(color: gr()),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -111,7 +109,7 @@ class Login extends StatelessWidget {
                               color: gr(),
                             ),
                             fillColor: Colors.white),
-                        cursorColor: Colors.white,
+                        cursorColor: gr(),
                       ),
                     ),
                   ),

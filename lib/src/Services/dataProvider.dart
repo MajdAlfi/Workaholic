@@ -97,4 +97,51 @@ class dataProvider<userData> with ChangeNotifier {
     theRank = Rank;
     notifyListeners();
   }
+
+  updateGender<userData>(String gender) {
+    theGender = gender;
+    notifyListeners();
+  }
+
+  updateAge<userData>(int Age) {
+    theAge = Age;
+    notifyListeners();
+  }
+
+  updateWeight<userData>(int Weight) {
+    theWeight = Weight;
+    notifyListeners();
+  }
+
+  updateHeight<userData>(int Height) {
+    theHeight = Height;
+    notifyListeners();
+  }
+
+  updateGoal<userData>(String Goal) {
+    theGoal = Goal;
+    notifyListeners();
+  }
+
+  updateExp<userData>(String Exp) {
+    theExperience = Exp;
+    notifyListeners();
+  }
+
+  deleteAll<userData>() {
+    theUid = null;
+    theName = null;
+    theEmail = null;
+    thePass = null;
+    theAge = null;
+    theWeight = null;
+    theHeight = null;
+    theGender = null;
+    theGoal = null;
+    theExperience = null;
+    theStreak = null;
+    theRank = null;
+    theLevel = null;
+    notifyListeners();
+  }
 }

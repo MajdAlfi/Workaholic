@@ -28,12 +28,15 @@ class vids extends StatefulWidget {
 class _vidsState extends State<vids> {
   void initState() {
     super.initState();
-    _loadCounter();
+
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     final uid = user?.uid;
     setState(() {
       getTheName(uid, context);
+      streakGet(widget.fireStoreH, uid.toString(), context);
+      _loadCounter();
+      _loadLevel(uid);
     });
     // final docData = FirebaseFirestore.instance
     //   .collection('Levels')
@@ -43,20 +46,35 @@ class _vidsState extends State<vids> {
 
   void dispose() {
     super.dispose();
-    _loadCounter();
     setState(() {
+      _loadCounter();
+      _loadLevel(context);
+
       getTheName(uid, context);
     });
   }
 
   Future<void> _loadCounter() async {
     final prefs = await SharedPreferences.getInstance();
-    Provider.of<dataProvider>(context, listen: false)
-        .uploadLevel(await getIt());
     setState(() {
       Provider.of<dataProvider>(context, listen: false)
           .changeTheDay(prefs.getInt('counter') ?? 1);
     });
+  }
+
+  _loadLevel(uid) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getInt('Level') != null) {
+      int digit = await getIt();
+      Provider.of<dataProvider>(context, listen: false).uploadLevel(digit);
+      print('digit1:$digit');
+    } else {
+      await setIt(context, uid);
+      int digit = await getIt();
+      Provider.of<dataProvider>(context, listen: false).uploadLevel(digit);
+      print('digit2:$digit');
+    }
   }
 
   Widget build(BuildContext context) {
@@ -70,6 +88,15 @@ class _vidsState extends State<vids> {
     //  gettheDayData(context);
     double widthScr = MediaQuery.of(context).size.width;
     double heightScr = MediaQuery.of(context).size.height;
+    // Future<QuerySnapshot<Map<String, dynamic>>> dayName = widget.fireStoreH
+    //     .collection('Levels')
+    //     .where('Level', isEqualTo: context.read<dataProvider>().theLevel)
+    //     .where('day', isEqualTo: _counter)
+    //     .get()
+    //     .then((DocumentSnapshot value) {
+    //   return value.get('dayName') as Map<String, dynamic>;
+    // });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -94,7 +121,7 @@ class _vidsState extends State<vids> {
               } else if (snapshot.data == null) {
                 return Text('no Data');
               } else if (snapshot.hasData) {
-                streakGet(fire, Uid, context);
+                //     streakGet(fire, Uid.toString(), context);
 
                 return TextButton(
                   child: Text("${context.watch<dataProvider>().theStreak}🔥",
@@ -384,35 +411,36 @@ getTheName(uid, BuildContext context) async {
 
     return dataU;
   });
-  userData dataX = await USERData;
-  Provider.of<dataProvider>(context, listen: false).regularUse(
-      uid,
-      dataX.Name,
-      dataX.Email,
-      dataX.Age,
-      dataX.Weight,
-      dataX.Height,
-      dataX.Gender,
-      dataX.Goal,
-      dataX.Experience,
-      dataX.Streak,
-      dataX.Rank,
-      dataX.Level);
+  if (USERData != null) {
+    userData dataX = await USERData;
+    Provider.of<dataProvider>(context, listen: false).regularUse(
+        uid,
+        dataX.Name,
+        dataX.Email,
+        dataX.Age,
+        dataX.Weight,
+        dataX.Height,
+        dataX.Gender,
+        dataX.Goal,
+        dataX.Experience,
+        dataX.Streak,
+        dataX.Rank,
+        dataX.Level);
+  }
 }
 
-streakGet(fire, Uid, context) async {
-  Future streakData = fire
-      .collection('Users')
-      .doc(Uid)
-      .get()
-      .then((DocumentSnapshot value) async {
+streakGet(FirebaseFirestore fire, String Uid, BuildContext context) async {
+  Future streakData =
+      fire.collection('Users').doc(Uid).get().then((DocumentSnapshot value) {
     if (value.exists) {
       return value.get('Streak');
     }
   });
-  int streakCount = await streakData;
-  Provider.of<dataProvider>(context, listen: false)
-      .ExtraDataStreak(streakCount);
+  if (streakData != null) {
+    int streakCount = await streakData;
+    Provider.of<dataProvider>(context, listen: false)
+        .ExtraDataStreak(streakCount);
+  }
 }
 
 showAlertDialog(BuildContext context, String x) async {
@@ -485,8 +513,28 @@ Color ButtonColor(prefs) {
 
 getIt() async {
   final prefs = await SharedPreferences.getInstance();
+  if (prefs.getInt('Level') != null) {
+    int x = prefs.getInt('Level')!;
+    return x;
+  } else {
+    print('Error occured');
+  }
+}
 
-  int x = prefs.getInt('Level')!;
-
-  return x;
+setIt(BuildContext context, uid) async {
+  final prefs = await SharedPreferences.getInstance();
+  final Num = FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid)
+      .get()
+      .then((DocumentSnapshot value) {
+    return value.get('Level');
+  });
+  int lvlInt = await Num;
+  if (lvlInt != null) {
+    prefs.setInt('Level', lvlInt);
+    print('ok:${lvlInt}');
+  } else {
+    print('its null!!!!');
+  }
 }
