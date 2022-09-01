@@ -20,6 +20,7 @@ class dataProvider<userData> with ChangeNotifier {
   int? theRank;
   int? theLevel;
   int? theDay;
+  String? theDayName;
   changeDataPro<userData>(String Name, String Email, String Pass) {
     theName = Name;
     theEmail = Email;
@@ -128,6 +129,11 @@ class dataProvider<userData> with ChangeNotifier {
     notifyListeners();
   }
 
+  changeDayName(String dayN) {
+    theDayName = dayN;
+    notifyListeners();
+  }
+
   deleteAll<userData>() {
     theUid = null;
     theName = null;
@@ -142,6 +148,7 @@ class dataProvider<userData> with ChangeNotifier {
     theStreak = null;
     theRank = null;
     theLevel = null;
+    theDayName = null;
     notifyListeners();
   }
 }

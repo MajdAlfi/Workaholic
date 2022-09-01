@@ -30,7 +30,9 @@ void main() async {
   }
 
   runApp(MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => dataProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => dataProvider()),
+      ],
       child: MaterialApp(routes: {
         '/First': (context) => MyApp(),
         '/Second': (context) => DataCollector2(),

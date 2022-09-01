@@ -10,7 +10,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_app/src/Models/dataModel.dart';
-import 'package:workout_app/src/Models/levelsModel.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
 import 'package:workout_app/src/Screens/interface/Streak.dart';
 import 'package:workout_app/src/Screens/interface/desc.dart';
@@ -150,10 +149,15 @@ class _vidsState extends State<vids> {
                     "Day $_counter || ",
                     style: TextStyle(color: gr(), fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    "Chest & Biceps",
-                    style: TextStyle(color: gr(), fontWeight: FontWeight.bold),
-                  ),
+                  FutureBuilder(
+                      future: nameValue(context),
+                      builder: (context, snapshot) {
+                        return Text(
+                          context.read<dataProvider>().theDayName.toString(),
+                          style: TextStyle(
+                              color: gr(), fontWeight: FontWeight.bold),
+                        );
+                      }),
                   Padding(
                     padding: const EdgeInsets.only(left: 30.0),
                     child: Container(
@@ -537,4 +541,18 @@ setIt(BuildContext context, uid) async {
   } else {
     print('its null!!!!');
   }
+}
+
+nameValue(BuildContext context) async {
+  String theDay = context.read<dataProvider>().theDay.toString();
+  Future snap = FirebaseFirestore.instance
+      .collection('Days')
+      .doc(theDay)
+      .get()
+      .then((DocumentSnapshot value) {
+    if (value.exists) return value.get('dayName');
+  });
+  String dayName = await snap;
+
+  Provider.of<dataProvider>(context, listen: false).changeDayName(dayName);
 }
