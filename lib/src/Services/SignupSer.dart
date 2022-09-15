@@ -18,7 +18,8 @@ Future<userData> addSignupDataDB(
     int rankX,
     String GenderX,
     String GoalX,
-    String ExpX) async {
+    String ExpX,
+    bool admin) async {
   userData userDATA = userData(
       Name: NameX,
       Email: EmailX,
@@ -30,7 +31,8 @@ Future<userData> addSignupDataDB(
       Rank: rankX,
       Gender: GenderX,
       Goal: GoalX,
-      Experience: ExpX);
+      Experience: ExpX,
+      admin: admin);
 
   await fireStore.collection('Users').doc(uid).set(userDATA.toMap());
   return userDATA;

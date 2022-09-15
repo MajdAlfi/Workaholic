@@ -429,7 +429,8 @@ getTheName(uid, BuildContext context) async {
         dataX.Experience,
         dataX.Streak,
         dataX.Rank,
-        dataX.Level);
+        dataX.Level,
+        dataX.admin);
   }
 }
 

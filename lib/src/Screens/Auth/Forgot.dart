@@ -26,6 +26,15 @@ class forgot extends StatelessWidget {
       body: Stack(
         children: [
           Positioned(
+            top: (heightScr * 0.1),
+            left: (widthScr * 0.5) - 160,
+            child: Text(
+              'Forgotten Password',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: gr(), fontSize: 30),
+            ),
+          ),
+          Positioned(
             top: (heightScr * 0.3),
             left: (widthScr * 0.5) - 140,
             child: Container(
@@ -33,7 +42,6 @@ class forgot extends StatelessWidget {
               height: 50,
               child: TextField(
                 controller: emailController,
-                autofocus: false,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -46,7 +54,7 @@ class forgot extends StatelessWidget {
                       color: Colors.white,
                     ),
                     fillColor: gr()),
-                cursorColor: gr(),
+                cursorColor: Colors.white,
               ),
             ),
           ),

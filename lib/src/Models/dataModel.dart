@@ -13,6 +13,7 @@ class userData {
   int? Streak;
   int? Rank;
   int Level;
+  bool admin;
   userData({
     required this.Name,
     required this.Email,
@@ -22,25 +23,26 @@ class userData {
     required this.Gender,
     required this.Goal,
     required this.Experience,
+    required this.admin,
     this.Streak,
     this.Rank,
     required this.Level,
   });
 
-  userData copyWith({
-    String? Name,
-    String? Email,
-    int? Age,
-    int? Weight,
-    int? Height,
-    String? Gender,
-    String? Goal,
-    String? Experience,
-    bool? signUp,
-    int? Streak,
-    int? Rank,
-    int? Level,
-  }) {
+  userData copyWith(
+      {String? Name,
+      String? Email,
+      int? Age,
+      int? Weight,
+      int? Height,
+      String? Gender,
+      String? Goal,
+      String? Experience,
+      bool? signUp,
+      int? Streak,
+      int? Rank,
+      int? Level,
+      bool? admin}) {
     return userData(
       Name: Name ?? this.Name,
       Email: Email ?? this.Email,
@@ -53,6 +55,7 @@ class userData {
       Streak: Streak ?? this.Streak,
       Rank: Rank ?? this.Rank,
       Level: Level ?? this.Level,
+      admin: admin ?? this.admin,
     );
   }
 
@@ -69,6 +72,7 @@ class userData {
       'Streak': Streak,
       'Rank': Rank,
       'Level': Level,
+      'admin': admin,
     };
   }
 
@@ -85,6 +89,7 @@ class userData {
       Streak: map['Streak'] != null ? map['Streak'] as int : null,
       Rank: map['Rank'] != null ? map['Rank'] as int : null,
       Level: map['Level'] as int,
+      admin: map['admin'] as bool,
     );
   }
 
@@ -95,7 +100,7 @@ class userData {
 
   @override
   String toString() {
-    return 'userData(Name: $Name, Email: $Email, Age: $Age, Weight: $Weight, Height: $Height, Gender: $Gender, Goal: $Goal, Experience: $Experience, Streak: $Streak, Rank: $Rank, Level: $Level)';
+    return 'userData(Name: $Name, Email: $Email, Age: $Age, Weight: $Weight, Height: $Height, Gender: $Gender, Goal: $Goal, Experience: $Experience, Streak: $Streak, Rank: $Rank, Level: $Level,admin: $admin)';
   }
 
   @override
@@ -112,7 +117,8 @@ class userData {
         other.Experience == Experience &&
         other.Streak == Streak &&
         other.Rank == Rank &&
-        other.Level == Level;
+        other.Level == Level &&
+        other.admin == admin;
   }
 
   @override
@@ -127,6 +133,7 @@ class userData {
         Experience.hashCode ^
         Streak.hashCode ^
         Rank.hashCode ^
-        Level.hashCode;
+        Level.hashCode ^
+        admin.hashCode;
   }
 }

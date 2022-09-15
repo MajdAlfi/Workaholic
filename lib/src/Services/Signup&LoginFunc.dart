@@ -28,8 +28,8 @@ Future<User?> signupAuth(
     UserCredential userCredential =
         await auth.createUserWithEmailAndPassword(email: Email, password: Pass);
 
-    await addSignupDataDB(
-        Name, Email, Age, Weight, Height, Level, 0, 0, Gender, Goal, Exp);
+    await addSignupDataDB(Name, Email, Age, Weight, Height, Level, 0, 0, Gender,
+        Goal, Exp, false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('uid', userCredential.user!.uid);
     prefs.setString('Tmr', DateTime.now().toString());

@@ -21,6 +21,7 @@ class dataProvider<userData> with ChangeNotifier {
   int? theLevel;
   int? theDay;
   String? theDayName;
+  bool? theAdmin;
   changeDataPro<userData>(String Name, String Email, String Pass) {
     theName = Name;
     theEmail = Email;
@@ -71,19 +72,19 @@ class dataProvider<userData> with ChangeNotifier {
   }
 
   regularUse<userData>(
-    String? Uid,
-    String? Name,
-    String? Email,
-    int? Age,
-    int? Weight,
-    int? Height,
-    String? Gender,
-    String? Goal,
-    String? Experience,
-    int? Streak,
-    int? Rank,
-    int? Level,
-  ) {
+      String? Uid,
+      String? Name,
+      String? Email,
+      int? Age,
+      int? Weight,
+      int? Height,
+      String? Gender,
+      String? Goal,
+      String? Experience,
+      int? Streak,
+      int? Rank,
+      int? Level,
+      bool? admin) {
     theUid = Uid;
     theName = Name;
     theEmail = Email;
@@ -96,6 +97,7 @@ class dataProvider<userData> with ChangeNotifier {
     theLevel = Level;
     theStreak = Streak;
     theRank = Rank;
+    theAdmin = admin;
     notifyListeners();
   }
 
@@ -149,6 +151,7 @@ class dataProvider<userData> with ChangeNotifier {
     theRank = null;
     theLevel = null;
     theDayName = null;
+    theAdmin = null;
     notifyListeners();
   }
 }

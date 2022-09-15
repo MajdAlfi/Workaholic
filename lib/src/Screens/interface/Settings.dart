@@ -34,6 +34,7 @@ class _SettingsState extends State<Settings> {
     String? genderProv = context.watch<dataProvider>().theGender;
     String? goalProv = context.watch<dataProvider>().theGoal;
     String? expProv = context.watch<dataProvider>().theExperience;
+    bool? admin = context.read<dataProvider>().theAdmin;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -90,6 +91,22 @@ class _SettingsState extends State<Settings> {
                       bottomRight: Radius.circular(10))),
               child: Stack(
                 children: [
+                  admin == true
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: IconButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/admin');
+                                  },
+                                  icon: Icon(
+                                    Icons.upload,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ))),
+                        )
+                      : SizedBox(),
                   Align(
                     alignment: Alignment.topCenter,
                     child: CircleAvatar(

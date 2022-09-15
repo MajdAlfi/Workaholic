@@ -47,10 +47,19 @@ class Signup extends StatelessWidget {
         Align(
           alignment: Alignment.bottomLeft,
           child: Container(
-              height: heightScr - 100,
+              height: heightScr - 150,
               width: widthScr - 60,
               child: Stack(
                 children: [
+                  Positioned(
+                      top: (heightScr * 0.1) - 100,
+                      left: -20,
+                      child: Image.asset(
+                        'assets/images/pic.png',
+                        height: 300,
+                        width: 300,
+                        fit: BoxFit.cover,
+                      )),
                   Positioned(
                     top: (heightScr * 0.5) - 160,
                     child: Text(

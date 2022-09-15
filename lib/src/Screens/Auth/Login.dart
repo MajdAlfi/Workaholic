@@ -53,6 +53,15 @@ class Login extends StatelessWidget {
               child: Stack(
                 children: [
                   Positioned(
+                      top: (heightScr * 0.2) - 100,
+                      left: -20,
+                      child: Image.asset(
+                        'assets/images/logo2png.png',
+                        height: 300,
+                        width: 300,
+                        fit: BoxFit.cover,
+                      )),
+                  Positioned(
                     top: (heightScr * 0.5) - 100,
                     child: Text(
                       "Login",
