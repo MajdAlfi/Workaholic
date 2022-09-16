@@ -147,7 +147,8 @@ class _DataCollector2State extends State<DataCollector2> {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: gr()),
                   child: TextButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        showAlertLoading(context);
                         if (DefaultG != "Select your Goal" &&
                             DefaultE != "Select your Experience Level") {
                           Provider.of<dataProvider>(context, listen: false)
@@ -155,7 +156,7 @@ class _DataCollector2State extends State<DataCollector2> {
                                   DefaultG.toString(), DefaultE.toString(), 1);
                           Provider.of<dataProvider>(context, listen: false)
                               .changeTheDay(1);
-                          signupAuth(
+                          await signupAuth(
                               context,
                               context.read<dataProvider>().theName.toString(),
                               context.read<dataProvider>().theEmail.toString(),
@@ -182,6 +183,7 @@ class _DataCollector2State extends State<DataCollector2> {
                                   .read<dataProvider>()
                                   .theExperience
                                   .toString());
+                          Navigator.pop(context);
                         } else {
                           showAlertDialog(context,
                               'Please select Your Goal and Experience');
@@ -225,6 +227,17 @@ showAlertDialog(BuildContext context, String x) {
           //    ,
           //  )
         ],
+      );
+    },
+  );
+}
+
+showAlertLoading(BuildContext context) {
+  showCupertinoDialog(
+    context: context,
+    builder: (context) {
+      return CupertinoAlertDialog(
+        content: CupertinoActivityIndicator(),
       );
     },
   );

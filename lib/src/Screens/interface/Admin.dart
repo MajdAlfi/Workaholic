@@ -393,26 +393,50 @@ class _adminState extends State<admin> {
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            "Thumb",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: gr(),
-                                fontSize: 20),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 20.0),
-                            child: Text(
-                              "Video",
+                          Column(children: [
+                            Text(
+                              "Thumb",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: gr(),
                                   fontSize: 20),
                             ),
+                            SizedBox(
+                              width: 80,
+                              height: 20,
+                              child: Text(
+                                _photo != null
+                                    ? basename(_photo!.path)
+                                    : 'Null',
+                                style: TextStyle(color: gr(), fontSize: 8),
+                              ),
+                            ),
+                          ]),
+                          SizedBox(
+                            height: 10,
                           ),
+                          Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Text(
+                                  "Video",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: gr(),
+                                      fontSize: 20),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 80,
+                                height: 20,
+                                child: Text(
+                                  _Vid != null ? basename(_Vid!.path) : 'Null',
+                                  style: TextStyle(color: gr(), fontSize: 8),
+                                ),
+                              ),
+                            ],
+                          )
                         ]),
                     SizedBox(
                       height: 10,
@@ -480,12 +504,15 @@ class _adminState extends State<admin> {
                             await uploadVid();
                             await addDataToFireStore();
                             Navigator.pop(context);
-                            exName.text = '';
-                            exDesc.text = '';
-                            _Vid = null;
-                            _photo = null;
-                            DefaultL == 'Level';
-                            DefaultD == 'Day';
+                            setState(() {
+                              exName.text = '';
+                              exDesc.text = '';
+                              _Vid = null;
+                              _photo = null;
+                              DefaultL == 'Level';
+                              DefaultD == 'Day';
+                            });
+
                             showAlertDialog(context, 'Success');
                           } else {
                             showAlertDialog(context,
