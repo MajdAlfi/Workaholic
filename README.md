@@ -16,10 +16,10 @@ Workaholic is an app with a mission to transform your body and health. The app p
 
 ## Levels Guide
 Contains 4 digits 
-First digit represents Age where from 16 to 40 is represented by number 1 and 40 - 100 is represented by 2
-Second digit represents Gender where male is 1 and female is 2.
-Third digit represents the Goal where Body Building is 1 ,Weight Loss is 2 and Both is 3.
-Forth and last digit represents Experience where Less than 3 months is 1, 3-6 Months is 2, 6 months - 1 year is 3, 1-2 years is 4 and 2+ years is 5.
+- First digit represents Age where from 16 to 40 is represented by number 1 and 40 - 100 is represented by 2
+- Second digit represents Gender where male is 1 and female is 2.
+- Third digit represents the Goal where Body Building is 1 ,Weight Loss is 2 and Both is 3.
+- Forth and last digit represents Experience where Less than 3 months is 1, 3-6 Months is 2, 6 months - 1 year is 3, 1-2 years is 4 and 2+ years is 5.
 
 ## Screens
 ![Untitled](https://user-images.githubusercontent.com/91944341/179742423-32ea6879-1b56-4eec-a37b-52dcc49ec2c0.jpg)
