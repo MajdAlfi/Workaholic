@@ -82,7 +82,7 @@ class _SettingsState extends State<Settings> {
       body: Column(
         children: [
           Container(
-              width: 400,
+              width: widthScr,
               height: 200,
               decoration: BoxDecoration(
                   color: gr(),
@@ -139,7 +139,7 @@ class _SettingsState extends State<Settings> {
           ),
           Container(
               height: 400,
-              width: 320,
+              width: widthScr - 60,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: gr()),

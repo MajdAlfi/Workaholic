@@ -46,7 +46,7 @@ class _StreakState extends State<Streak> {
         body: Column(
           children: [
             Container(
-                width: 400,
+                width: widthScr,
                 height: 200,
                 decoration: BoxDecoration(
                     color: gr(),

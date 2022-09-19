@@ -17,8 +17,8 @@ class admin extends StatefulWidget {
 class _adminState extends State<admin> {
   final exName = TextEditingController();
   final exDesc = TextEditingController();
-  late final destinationImg;
-  late final destinationVid;
+  late String destinationImg;
+  late String destinationVid;
   var lvl = [
     "Level",
     "1111",
@@ -158,8 +158,9 @@ class _adminState extends State<admin> {
     try {
       final ref = FirebaseStorage.instance.ref(destinationImg);
       await ref.putFile(_photo!);
-    } catch (e) {
-      print(e.toString());
+    } on FirebaseException catch (e) {
+      // Caught an exception from Firebase.
+      print("Failed with error in img '${e.code}': ${e.message}");
     }
   }
 
@@ -171,8 +172,9 @@ class _adminState extends State<admin> {
     try {
       final ref = FirebaseStorage.instance.ref(destinationVid);
       await ref.putFile(_Vid!);
-    } catch (e) {
-      print(e.toString());
+    } on FirebaseException catch (e) {
+      // Caught an exception from Firebase.
+      print("Failed with error in vid '${e.code}': ${e.message}");
     }
   }
 
@@ -190,8 +192,9 @@ class _adminState extends State<admin> {
         'Thumb': imageUrl,
         'vidUrl': VidUrl
       });
-    } catch (e) {
-      print(e.toString());
+    } on FirebaseException catch (e) {
+      // Caught an exception from Firebase.
+      print("Failed with error in adding '${e.code}': ${e.message}");
     }
   }
 
@@ -500,20 +503,25 @@ class _adminState extends State<admin> {
                               DefaultL != 'Level' &&
                               DefaultD != 'Day') {
                             showAlertLoading(context);
-                            await uploadImg();
-                            await uploadVid();
-                            await addDataToFireStore();
-                            Navigator.pop(context);
-                            setState(() {
-                              exName.text = '';
-                              exDesc.text = '';
-                              _Vid = null;
-                              _photo = null;
-                              DefaultL == 'Level';
-                              DefaultD == 'Day';
-                            });
-
-                            showAlertDialog(context, 'Success');
+                            try {
+                              await uploadImg();
+                              await uploadVid();
+                              await addDataToFireStore();
+                              Navigator.pop(context);
+                              setState(() {
+                                exName.text = '';
+                                exDesc.text = '';
+                                destinationImg = '';
+                                destinationVid = '';
+                                _Vid = null;
+                                _photo = null;
+                                DefaultL == 'Level';
+                                DefaultD == 'Day';
+                              });
+                              showAlertDialog(context, 'Done');
+                            } on FirebaseException catch (e) {
+                              print('endError ${e.message}');
+                            }
                           } else {
                             showAlertDialog(context,
                                 'Please fill in the required data, select Thumbnail and a video as well!');

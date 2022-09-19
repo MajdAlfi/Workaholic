@@ -63,7 +63,7 @@ class _descState extends State<desc> {
                 Text(
                   "${widget.inName}",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 40, color: gr()),
+                      fontWeight: FontWeight.bold, fontSize: 30, color: gr()),
                 ),
                 SizedBox(
                   height: 20,

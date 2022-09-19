@@ -148,7 +148,7 @@ class _DataCollector2State extends State<DataCollector2> {
                       color: gr()),
                   child: TextButton(
                       onPressed: () async {
-                        showAlertLoading(context);
+                        //     showAlertLoading(context);
                         if (DefaultG != "Select your Goal" &&
                             DefaultE != "Select your Experience Level") {
                           Provider.of<dataProvider>(context, listen: false)
@@ -183,7 +183,7 @@ class _DataCollector2State extends State<DataCollector2> {
                                   .read<dataProvider>()
                                   .theExperience
                                   .toString());
-                          Navigator.pop(context);
+                          //      Navigator.pop(context);
                         } else {
                           showAlertDialog(context,
                               'Please select Your Goal and Experience');
