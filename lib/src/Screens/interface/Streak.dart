@@ -1,17 +1,24 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
 import 'package:workout_app/src/Screens/interface/Videos_preview.dart';
 import 'package:workout_app/src/Screens/interface/desc.dart';
-import 'package:workout_app/src/Services/SignupSer.dart';
-import 'package:workout_app/src/Services/dataProvider.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:workout_app/src/Services/Auth/SignupSer.dart';
+import 'package:workout_app/src/Services/Data%20Handling/getValueStreak.dart';
+import 'package:workout_app/src/Services/Others/color.dart';
+import 'package:workout_app/src/Services/Others/dataProvider.dart';
+import 'package:workout_app/src/Services/Func/jump.dart';
+import 'package:workout_app/src/Widgets/Streak/listTile.dart';
+import 'package:workout_app/src/Widgets/Streak/stackRank.dart';
 
 class Streak extends StatefulWidget {
   Streak({Key? key}) : super(key: key);
@@ -29,7 +36,6 @@ class _StreakState extends State<Streak> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     final Uid = user?.uid;
-    double heightScr = MediaQuery.of(context).size.height;
     double widthScr = MediaQuery.of(context).size.width;
     // rankChange(context, context.read<dataProvider>().theEmail.toString(),
     //     widget.index);
@@ -66,7 +72,8 @@ class _StreakState extends State<Streak> {
                       return stackRank(
                           context,
                           widthScr,
-                          context.read<dataProvider>().theRank as int,
+                          int.parse(
+                              context.watch<dataProvider>().theRank.toString()),
                           widget._scrollController);
                     }
                     return Text('Uknown Error');
@@ -133,146 +140,4 @@ class _StreakState extends State<Streak> {
           ],
         ));
   }
-}
-
-Widget ranktxt(int rank) {
-  Widget avatar;
-  if (rank == 0) {
-    String Rank = 'Tap Here!';
-    avatar = ClipOval(
-      child: CircleAvatar(
-        backgroundColor: Colors.white,
-        radius: 70,
-        child: Text(
-          "$Rank",
-          style:
-              TextStyle(color: gr(), fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      ),
-    );
-  } else {
-    avatar = ClipOval(
-      child: CircleAvatar(
-        backgroundColor: Colors.white,
-        radius: 70,
-        child: Text(
-          "$rank",
-          style:
-              TextStyle(color: gr(), fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      ),
-    );
-  }
-  if (rank == 1) {
-    return ClipOval(
-      child: CircleAvatar(
-        backgroundColor: Color.fromARGB(255, 212, 210, 44),
-        radius: 70,
-        child: Text(
-          "$rank: Gold",
-          overflow: TextOverflow.visible,
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      ),
-    );
-  } else if (rank == 2) {
-    avatar = ClipOval(
-      child: CircleAvatar(
-        backgroundColor: Color.fromARGB(99, 169, 169, 169),
-        radius: 70,
-        child: Text(
-          "$rank: Silver",
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      ),
-    );
-  } else if (rank == 3) {
-    avatar = ClipOval(
-      child: CircleAvatar(
-        backgroundColor: Color.fromARGB(255, 216, 119, 55),
-        radius: 70,
-        child: Text(
-          "$rank: Bronze",
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      ),
-    );
-  }
-  return avatar;
-}
-
-ListTile tile(Email, int rank, String name, int streak, BuildContext context) {
-  return ListTile(
-      leading: Text("$rank"),
-      title: NameTxt(Email, name, context, rank),
-      trailing: Text('$streak🔥'));
-}
-
-Text NameTxt(Email, String name, BuildContext context, int index) {
-  if (context.read<dataProvider>().theEmail == Email) {
-    return Text(
-      '$name',
-      style: TextStyle(color: gr(), fontSize: 15, fontWeight: FontWeight.bold),
-    );
-  } else {
-    return Text('$name');
-  }
-}
-
-Future rankChange(BuildContext context, int index) async {
-  Provider.of<dataProvider>(context, listen: false).ExtraDataRank(index);
-  print(context.read<dataProvider>().theRank);
-}
-
-getValue(context, int index) async {
-  Future.delayed(Duration.zero, () {
-    Provider.of<dataProvider>(context, listen: false).ExtraDataRank(index);
-  });
-}
-
-Widget stackRank(BuildContext context, widthScr, int rank,
-    ItemScrollController _scrollController) {
-  return GestureDetector(
-    onTap: () {
-      if (rank != 0) {
-        jump(_scrollController, rank);
-      } else {
-        jump(_scrollController, 10000);
-      }
-    },
-    child: Stack(
-      children: [
-        Positioned(
-          left: (widthScr * 0.1) + 10,
-          top: 30,
-          child: Text(
-            "Rank:",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 25, color: Colors.white),
-          ),
-        ),
-        Align(alignment: Alignment.topCenter, child: ranktxt(rank)),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10.0),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Text(
-              context.read<dataProvider>().theName.toString(),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Colors.white),
-            ),
-          ),
-        )
-      ],
-    ),
-  );
-}
-
-Future jump(ItemScrollController _scrollController, int index) async {
-  _scrollController.jumpTo(index: index, alignment: 0.5);
 }

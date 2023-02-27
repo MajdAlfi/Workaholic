@@ -6,9 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workout_app/src/Services/SignupSer.dart';
-import 'package:workout_app/src/Services/analyze.dart';
-import 'package:workout_app/src/Services/dataProvider.dart';
+import 'package:workout_app/src/Services/Auth/SignupSer.dart';
+import 'package:workout_app/src/Services/Data%20Handling/analyze.dart';
+import 'package:workout_app/src/Services/Others/dataProvider.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showAlertDialog.dart';
 
 Future<User?> signupAuth(
     BuildContext context,
@@ -93,30 +94,4 @@ Future delayPushU(BuildContext context) async {
   await new Future.delayed(new Duration(milliseconds: 1500), () {
     Navigator.pushReplacementNamed(context, '/vids');
   });
-}
-
-showAlertDialog(BuildContext context, String x) {
-  showCupertinoDialog(
-    context: context,
-    builder: (context) {
-      return CupertinoAlertDialog(
-        title: Text("Alert"),
-        content: Text(x),
-        actions: [
-          CupertinoDialogAction(
-              child: Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-          //  CupertinoDialogAction(
-          //    child: Text("NO"),
-          //    onPressed: (){
-          //      Navigator.of(context).pop();
-          //    }
-          //    ,
-          //  )
-        ],
-      );
-    },
-  );
 }

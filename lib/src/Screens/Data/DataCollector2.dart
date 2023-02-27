@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/src/Screens/Auth/Signup.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
-import 'package:workout_app/src/Services/Signup&LoginFunc.dart';
-import 'package:workout_app/src/Services/SignupSer.dart';
-import 'package:workout_app/src/Services/dataProvider.dart';
+import 'package:workout_app/src/Services/Auth/Signup&LoginFunc.dart';
+import 'package:workout_app/src/Services/Auth/SignupSer.dart';
+import 'package:workout_app/src/Services/Others/color.dart';
+import 'package:workout_app/src/Services/Others/dataProvider.dart';
+import 'package:workout_app/src/Services/Others/height&width.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showAlertDialog.dart';
 
 class DataCollector2 extends StatefulWidget {
   @override
@@ -13,8 +16,12 @@ class DataCollector2 extends StatefulWidget {
 }
 
 class _DataCollector2State extends State<DataCollector2> {
-  var Goal = ["Select your Goal", "Body Building", "Weight Loss", "Both"]
-      .map<DropdownMenuItem<String>>((String limitX) {
+  var Goal = [
+    "Select your Goal",
+    "Body Building",
+    "Weight Loss",
+    "Maintain Body Weight"
+  ].map<DropdownMenuItem<String>>((String limitX) {
     return DropdownMenuItem(
         child: Text(
           limitX,
@@ -65,7 +72,7 @@ class _DataCollector2State extends State<DataCollector2> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 160,
+                height: heightScr(context, 20),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
@@ -79,7 +86,7 @@ class _DataCollector2State extends State<DataCollector2> {
                 height: 10,
               ),
               Container(
-                  width: 320,
+                  width: widthScr(context, 80),
                   height: 50,
                   decoration: BoxDecoration(
                       color: gr(),
@@ -113,7 +120,7 @@ class _DataCollector2State extends State<DataCollector2> {
                 height: 10,
               ),
               Container(
-                  width: 320,
+                  width: widthScr(context, 80),
                   height: 50,
                   decoration: BoxDecoration(
                       color: gr(),
@@ -136,13 +143,13 @@ class _DataCollector2State extends State<DataCollector2> {
                         }),
                   )),
               SizedBox(
-                height: 120,
+                height: heightScr(context, 1),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 100.0),
                 child: Container(
                   height: 40,
-                  width: 120,
+                  width: widthScr(context, 30),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: gr()),
@@ -204,41 +211,4 @@ class _DataCollector2State extends State<DataCollector2> {
       ),
     );
   }
-}
-
-showAlertDialog(BuildContext context, String x) {
-  showCupertinoDialog(
-    context: context,
-    builder: (context) {
-      return CupertinoAlertDialog(
-        title: Text("Alert"),
-        content: Text(x),
-        actions: [
-          CupertinoDialogAction(
-              child: Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-          //  CupertinoDialogAction(
-          //    child: Text("NO"),
-          //    onPressed: (){
-          //      Navigator.of(context).pop();
-          //    }
-          //    ,
-          //  )
-        ],
-      );
-    },
-  );
-}
-
-showAlertLoading(BuildContext context) {
-  showCupertinoDialog(
-    context: context,
-    builder: (context) {
-      return CupertinoAlertDialog(
-        content: CupertinoActivityIndicator(),
-      );
-    },
-  );
 }

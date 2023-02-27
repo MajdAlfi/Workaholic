@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
-import 'package:workout_app/src/Services/SignupSer.dart';
+import 'package:workout_app/src/Services/Auth/SignupSer.dart';
+import 'package:workout_app/src/Services/Others/color.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showAlertDialog.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showLoadingDIalog.dart';
 
 class admin extends StatefulWidget {
   @override
@@ -571,41 +574,4 @@ class _adminState extends State<admin> {
           );
         });
   }
-}
-
-showAlertDialog(BuildContext context, String x) {
-  showCupertinoDialog(
-    context: context,
-    builder: (context) {
-      return CupertinoAlertDialog(
-        title: Text("Alert"),
-        content: Text(x),
-        actions: [
-          CupertinoDialogAction(
-              child: Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-          //  CupertinoDialogAction(
-          //    child: Text("NO"),
-          //    onPressed: (){
-          //      Navigator.of(context).pop();
-          //    }
-          //    ,
-          //  )
-        ],
-      );
-    },
-  );
-}
-
-showAlertLoading(BuildContext context) {
-  showCupertinoDialog(
-    context: context,
-    builder: (context) {
-      return CupertinoAlertDialog(
-        content: CupertinoActivityIndicator(),
-      );
-    },
-  );
 }

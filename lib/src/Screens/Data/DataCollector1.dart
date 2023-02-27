@@ -6,7 +6,11 @@ import 'package:workout_app/src/Screens/Auth/Signup.dart';
 import 'package:workout_app/src/Screens/interface/Settings.dart';
 import 'package:workout_app/src/Screens/interface/Videos_preview.dart';
 import 'package:workout_app/src/Screens/interface/desc.dart';
-import 'package:workout_app/src/Services/dataProvider.dart';
+import 'package:workout_app/src/Services/Data%20Handling/checkData.dart';
+import 'package:workout_app/src/Services/Others/color.dart';
+import 'package:workout_app/src/Services/Others/dataProvider.dart';
+import 'package:workout_app/src/Services/Others/height&width.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showAlertDialog.dart';
 
 import 'DataCollector2.dart';
 
@@ -72,7 +76,7 @@ class _MyAppState extends State<MyApp> {
                 height: 10,
               ),
               Container(
-                width: 320,
+                width: widthScr(context, 80),
                 height: 50,
                 child: TextField(
                   controller: AgeValue,
@@ -107,7 +111,7 @@ class _MyAppState extends State<MyApp> {
                 height: 10,
               ),
               Container(
-                width: 320,
+                width: widthScr(context, 80),
                 height: 50,
                 child: TextField(
                   controller: WeightValue,
@@ -142,7 +146,7 @@ class _MyAppState extends State<MyApp> {
                 height: 10,
               ),
               Container(
-                width: 320,
+                width: widthScr(context, 80),
                 height: 50,
                 child: TextField(
                   controller: HeightValue,
@@ -177,7 +181,7 @@ class _MyAppState extends State<MyApp> {
                 height: 10,
               ),
               Container(
-                  width: 320,
+                  width: widthScr(context, 80),
                   height: 50,
                   decoration: BoxDecoration(
                       color: gr(),
@@ -200,13 +204,13 @@ class _MyAppState extends State<MyApp> {
                         }),
                   )),
               SizedBox(
-                height: 120,
+                height: heightScr(context, 1),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 105.0),
                 child: Container(
                   height: 40,
-                  width: 120,
+                  width: widthScr(context, 30),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: gr()),
@@ -242,52 +246,4 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
-}
-
-void Push(BuildContext context) {
-  Navigator.pushNamed(context, '/second');
-}
-
-Color gr() {
-  return Color.fromARGB(255, 52, 165, 118);
-}
-
-checkData(
-    BuildContext context, int Age, int Weight, int Height, String Gender) {
-  if ((Age >= 16 && Age < 100) &&
-      (Weight > 0 && Weight < 300) &&
-      (Height > 0 && Height < 250) &&
-      (Gender == 'Male' || Gender == 'Female')) {
-    Provider.of<dataProvider>(context, listen: false)
-        .uploadUserData(Age, Weight, Height, Gender);
-    Navigator.pushNamed(context, '/Second');
-  } else {
-    showAlertDialog(context, 'Please Enter a reasonable data');
-  }
-}
-
-showAlertDialog(BuildContext context, String x) {
-  showCupertinoDialog(
-    context: context,
-    builder: (context) {
-      return CupertinoAlertDialog(
-        title: Text("Alert"),
-        content: Text(x),
-        actions: [
-          CupertinoDialogAction(
-              child: Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-          //  CupertinoDialogAction(
-          //    child: Text("NO"),
-          //    onPressed: (){
-          //      Navigator.of(context).pop();
-          //    }
-          //    ,
-          //  )
-        ],
-      );
-    },
-  );
 }

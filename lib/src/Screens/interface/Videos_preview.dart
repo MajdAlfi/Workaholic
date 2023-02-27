@@ -13,10 +13,20 @@ import 'package:workout_app/src/Models/dataModel.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
 import 'package:workout_app/src/Screens/interface/Streak.dart';
 import 'package:workout_app/src/Screens/interface/desc.dart';
-import 'package:workout_app/src/Services/SignupSer.dart';
-import 'package:workout_app/src/Services/dataProvider.dart';
-import 'package:workout_app/src/Services/test.dart';
-import 'package:workout_app/src/Services/updateDay.dart';
+import 'package:workout_app/src/Services/Auth/SignupSer.dart';
+import 'package:workout_app/src/Services/Func/checkDay.dart';
+import 'package:workout_app/src/Services/Func/getLvl.dart';
+import 'package:workout_app/src/Services/Func/getTheDate.dart';
+import 'package:workout_app/src/Services/Func/getTheName.dart';
+import 'package:workout_app/src/Services/Func/nameValue.dart';
+import 'package:workout_app/src/Services/Func/setLvl.dart';
+import 'package:workout_app/src/Services/Func/streakGet.dart';
+import 'package:workout_app/src/Services/Others/color.dart';
+import 'package:workout_app/src/Services/Others/dataProvider.dart';
+import 'package:workout_app/src/Services/Others/height&width.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showAlertDialog.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showAlertDialogComplete.dart';
+import 'package:workout_app/src/Widgets/VideosPreview/exData.dart';
 
 class vids extends StatefulWidget {
   @override
@@ -65,12 +75,12 @@ class _vidsState extends State<vids> {
     final prefs = await SharedPreferences.getInstance();
 
     if (prefs.getInt('Level') != null) {
-      int digit = await getIt();
+      int digit = await getLvl();
       Provider.of<dataProvider>(context, listen: false).uploadLevel(digit);
       print('digit1:$digit');
     } else {
-      await setIt(context, uid);
-      int digit = await getIt();
+      await setLvl(context, uid);
+      int digit = await getLvl();
       Provider.of<dataProvider>(context, listen: false).uploadLevel(digit);
       print('digit2:$digit');
     }
@@ -85,8 +95,6 @@ class _vidsState extends State<vids> {
     int? _counter = context.read<dataProvider>().theDay;
     print(_counter);
     //  gettheDayData(context);
-    double widthScr = MediaQuery.of(context).size.width;
-    double heightScr = MediaQuery.of(context).size.height;
     // Future<QuerySnapshot<Map<String, dynamic>>> dayName = widget.fireStoreH
     //     .collection('Levels')
     //     .where('Level', isEqualTo: context.read<dataProvider>().theLevel)
@@ -176,7 +184,7 @@ class _vidsState extends State<vids> {
                             }
                             if (prefs.getBool('bool') == true) {
                               if (_counter != null) {
-                                if (await showAlertDialog(context,
+                                if (await showAlertDialogComplete(context,
                                         'Are you sure you completed the entire workout?') ==
                                     true) {
                                   setState(() {
@@ -205,7 +213,7 @@ class _vidsState extends State<vids> {
                                 }
                               }
                             } else {
-                              showAlertDialog2(
+                              showAlertDialog(
                                   context, 'Please come back tomowrow');
                             }
                           },
@@ -228,7 +236,7 @@ class _vidsState extends State<vids> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
-                      width: widthScr - 30,
+                      width: widthScr(context, 90),
                       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                         stream: widget.fireStoreH
                             .collection('Levels')
@@ -270,290 +278,4 @@ class _vidsState extends State<vids> {
       ),
     );
   }
-}
-
-// Future<QuerySnapshot<Map<String, dynamic>>> fBuilder() async {
-//   FirebaseFirestore fire = FirebaseFirestore.instance;
-//   final dataX = await fire
-//       .collection('Levels')
-//       .doc('1')
-//       .get()
-//       .then((DocumentSnapshot snapshot) {
-//     final dataSnap = snapshot.data() as Map<String, dynamic>;
-//   });
-//   return dataX;
-// }
-
-Widget ExData(BuildContext context, int index, snap) {
-  String thumb = snap.data!.docs[index].data()['Thumb'].toString();
-  // final ref = FirebaseStorage.instance.ref().child("Thumb").child(thumb);
-  // var url = ref.getDownloadURL();
-
-  return GestureDetector(
-    onTap: (() => Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: ((context) => desc(
-                  inName: snap.data!.docs[index].data()['exName'].toString(),
-                  vidUrl: snap.data!.docs[index].data()['vidUrl'].toString(),
-                  description: snap.data!.docs[index].data()['desc'].toString(),
-                ))))),
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(20),
-        ),
-        color: gr(),
-      ),
-      height: 220,
-      width: 220,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0, top: 20),
-                child: Text(
-                  snap.data!.docs[index].data()['exName'].toString(),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                    border: Border.all(width: 1, color: Colors.white)),
-                height: 150,
-                width: 270,
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: new BorderRadius.circular(20.0),
-                      child: Image.network(
-                        thumb.toString(),
-                        height: 150,
-                        width: 270,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Center(
-                      child: Icon(
-                        Icons.play_arrow_outlined,
-                        color: Colors.white,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    ),
-  );
-}
-
-// Future gettheDayData(BuildContext context) async {
-//   FirebaseFirestore fireStoreH = FirebaseFirestore.instance;
-//   User? user;
-//   Future dataDay = fireStoreH
-//       .collection('Users')
-//       .doc(user?.uid)
-//       .get()
-//       .then((DocumentSnapshot documentSnapshot) {
-//     int exists = 1;
-//     if (documentSnapshot.get('day').exists == false) {
-//       print('Document does not exist on the database');
-//     } else {
-//       exists = documentSnapshot.get('day');
-//     }
-//     return exists;
-//   });
-//   int count = await dataDay;
-//   Provider.of<dataProvider>(context, listen: false)
-//       .changeTheDay(int.parse(count.toString()));
-// }
-Future<void> checkDay(int counter, BuildContext context) async {
-  final prefs = await SharedPreferences.getInstance();
-  if (counter == null) {
-    Provider.of<dataProvider>(context, listen: false).changeTheDay(1);
-    prefs.setInt('counter', counter);
-  } else if (counter == 7) {
-    Provider.of<dataProvider>(context, listen: false).changeTheDay(1);
-    prefs.setInt('counter', counter);
-  } else if (counter > 7) {
-    Provider.of<dataProvider>(context, listen: false).changeTheDay(1);
-    prefs.setInt('counter', 1);
-  } else {
-    if (counter != null) {
-      Provider.of<dataProvider>(context, listen: false)
-          .changeTheDay(counter + 1);
-      prefs.setInt('counter', counter + 1);
-    }
-  }
-}
-
-getTheName(uid, BuildContext context) async {
-  FirebaseFirestore fire = FirebaseFirestore.instance;
-  userData dataU;
-  final user = fire.collection('Users').doc(uid);
-  Future USERData = user.get().then((DocumentSnapshot event) {
-    dataU = userData.fromMap(event.data() as Map<String, dynamic>);
-
-    return dataU;
-  });
-  if (USERData != null) {
-    userData dataX = await USERData;
-    Provider.of<dataProvider>(context, listen: false).regularUse(
-        uid,
-        dataX.Name,
-        dataX.Email,
-        dataX.Age,
-        dataX.Weight,
-        dataX.Height,
-        dataX.Gender,
-        dataX.Goal,
-        dataX.Experience,
-        dataX.Streak,
-        dataX.Rank,
-        dataX.Level,
-        dataX.admin);
-  }
-}
-
-streakGet(FirebaseFirestore fire, String Uid, BuildContext context) async {
-  Future streakData =
-      fire.collection('Users').doc(Uid).get().then((DocumentSnapshot value) {
-    if (value.exists) {
-      return value.get('Streak');
-    }
-  });
-  if (streakData != null) {
-    int streakCount = await streakData;
-    Provider.of<dataProvider>(context, listen: false)
-        .ExtraDataStreak(streakCount);
-  }
-}
-
-showAlertDialog(BuildContext context, String x) async {
-  bool result = false;
-  await showCupertinoDialog(
-    context: context,
-    builder: (context) {
-      return CupertinoAlertDialog(
-        title: Text("Alert"),
-        content: Text(x),
-        actions: [
-          CupertinoDialogAction(
-              child: Text("Yes"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                result = true;
-              }),
-          CupertinoDialogAction(
-            child: Text("NO"),
-            onPressed: () {
-              Navigator.of(context).pop();
-              result = false;
-            },
-          )
-        ],
-      );
-    },
-  );
-  return result;
-}
-
-showAlertDialog2(BuildContext context, String x) async {
-  await showCupertinoDialog(
-    context: context,
-    builder: (context) {
-      return CupertinoAlertDialog(
-        title: Text("Alert"),
-        content: Text(x),
-        actions: [
-          CupertinoDialogAction(
-              child: Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-        ],
-      );
-    },
-  );
-}
-
-bool getTheDate(prefs) {
-  DateTime now = DateTime.now();
-  bool result = false;
-  if (DateTime.parse(prefs.getString('Tmr')!).compareTo(DateTime.now()) < 0) {
-    result = true;
-    return result;
-  } else {
-    print(false);
-  }
-  return result;
-}
-
-Color ButtonColor(prefs) {
-  if (prefs.getBool('bool') == true) {
-    return gr();
-  } else {
-    return Colors.grey;
-  }
-}
-
-getIt() async {
-  final prefs = await SharedPreferences.getInstance();
-  if (prefs.getInt('Level') != null) {
-    int x = prefs.getInt('Level')!;
-    return x;
-  } else {
-    print('Error occured');
-  }
-}
-
-setIt(BuildContext context, uid) async {
-  final prefs = await SharedPreferences.getInstance();
-  final Num = FirebaseFirestore.instance
-      .collection('Users')
-      .doc(uid)
-      .get()
-      .then((DocumentSnapshot value) {
-    return value.get('Level');
-  });
-  int lvlInt = await Num;
-  if (lvlInt != null) {
-    prefs.setInt('Level', lvlInt);
-    print('ok:${lvlInt}');
-  } else {
-    print('its null!!!!');
-  }
-}
-
-nameValue(BuildContext context) async {
-  String theDay = context.read<dataProvider>().theDay.toString();
-  Future snap = FirebaseFirestore.instance
-      .collection('Days')
-      .doc(theDay)
-      .get()
-      .then((DocumentSnapshot value) {
-    if (value.exists) return value.get('dayName');
-  });
-  String dayName = await snap;
-
-  Provider.of<dataProvider>(context, listen: false).changeDayName(dayName);
 }

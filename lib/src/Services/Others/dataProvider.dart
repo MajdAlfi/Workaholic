@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/src/Models/dataModel.dart';
 import 'package:workout_app/src/Screens/interface/Streak.dart';
 import 'package:workout_app/src/Screens/interface/Videos_preview.dart';
-import 'package:workout_app/src/Services/SignupSer.dart';
+import 'package:workout_app/src/Services/Auth/SignupSer.dart';
 
 class dataProvider<userData> with ChangeNotifier {
   String? theUid;

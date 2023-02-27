@@ -5,6 +5,8 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:video_player/video_player.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
+import 'package:workout_app/src/Services/Others/color.dart';
+import 'package:workout_app/src/Services/Others/height&width.dart';
 
 class desc extends StatefulWidget {
   desc({
@@ -12,13 +14,15 @@ class desc extends StatefulWidget {
     required this.inName,
     required this.vidUrl,
     required this.description,
+    required this.widthGet,
+    required this.heightGet,
   }) : super(key: key);
 
   final String inName;
   final String vidUrl;
   final String description;
-  int _contSizeWidth = 350;
-  int _contSizeHeight = 200;
+  double heightGet;
+  double widthGet;
   bool large = false;
 
   @override
@@ -28,6 +32,7 @@ class desc extends StatefulWidget {
 class _descState extends State<desc> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
+
   @override
   void initState() {
     super.initState();
@@ -69,8 +74,8 @@ class _descState extends State<desc> {
                   height: 20,
                 ),
                 Container(
-                  height: double.parse(widget._contSizeHeight.toString()),
-                  width: double.parse(widget._contSizeWidth.toString()),
+                  height: double.parse(widget.heightGet.toString()),
+                  width: double.parse(widget.widthGet.toString()),
                   decoration: BoxDecoration(
                       color: gr(),
                       borderRadius: BorderRadius.all(Radius.circular(5))),
@@ -143,18 +148,18 @@ class _descState extends State<desc> {
                           }
 
                           if (widget.large == true) {
-                            widget._contSizeWidth = 390;
-                            widget._contSizeHeight = 220;
+                            widget.widthGet = widthScr(context, 100);
+                            widget.heightGet = heightScr(context, 26);
                           } else {
-                            widget._contSizeWidth = 350;
-                            widget._contSizeHeight = 200;
+                            widget.widthGet = widthScr(context, 85);
+                            widget.heightGet = heightScr(context, 22);
                           }
                         });
                       }),
                 ),
                 Container(
-                  height: 300,
-                  width: 350,
+                  height: heightScr(context, 45),
+                  width: widthScr(context, 85),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),

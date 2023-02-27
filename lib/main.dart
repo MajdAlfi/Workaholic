@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_app/src/Screens/Auth/Forgot.dart';
 import 'package:workout_app/src/Screens/Auth/Login.dart';
 import 'package:workout_app/src/Screens/interface/Admin.dart';
-import 'package:workout_app/src/Services/dataProvider.dart';
+import 'package:workout_app/src/Services/Others/dataProvider.dart';
 import 'src/Screens/Auth/Signup.dart';
 import 'src/Screens/Data/DataCollector1.dart';
 import 'src/Screens/Data/DataCollector2.dart';

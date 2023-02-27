@@ -1,17 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
+import 'package:workout_app/src/Services/Auth/resetPass.dart';
+import 'package:workout_app/src/Services/Others/color.dart';
+import 'package:workout_app/src/Services/Others/height&width.dart';
+
+import '../../Services/showAlertDialog/showAlertDialog.dart';
 
 class forgot extends StatelessWidget {
   const forgot({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double widthScr = MediaQuery.of(context).size.width;
-    double heightScr = MediaQuery.of(context).size.height;
     TextEditingController emailController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
@@ -26,8 +30,8 @@ class forgot extends StatelessWidget {
       body: Stack(
         children: [
           Positioned(
-            top: (heightScr * 0.1),
-            left: (widthScr * 0.5) - 160,
+            top: (heightScr(context, 10)),
+            left: (widthScr(context, 50)) - 160,
             child: Text(
               'Forgotten Password',
               style: TextStyle(
@@ -35,11 +39,11 @@ class forgot extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: (heightScr * 0.3),
-            left: (widthScr * 0.5) - 140,
+            top: (heightScr(context, 23)),
+            left: (widthScr(context, 42)) - 135,
             child: Container(
-              width: 280,
-              height: 50,
+              width: widthScr(context, 85),
+              height: heightScr(context, 05),
               child: TextField(
                 controller: emailController,
                 style: TextStyle(color: Colors.white),
@@ -59,8 +63,8 @@ class forgot extends StatelessWidget {
             ),
           ),
           Positioned(
-              top: (heightScr * 0.3) + 80,
-              left: (widthScr * 0.5) - 40,
+              top: (heightScr(context, 30)) + 30,
+              left: (widthScr(context, 50)) - 40,
               child: Container(
                 height: 35,
                 width: 80,
@@ -94,45 +98,4 @@ class forgot extends StatelessWidget {
       ),
     );
   }
-}
-
-Future resetPassword(
-    {required String email, required BuildContext context}) async {
-  final auth = FirebaseAuth.instance;
-  try {
-    await auth.sendPasswordResetEmail(email: email);
-    showAlertDialog(context, 'Check your email please');
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      showAlertDialog(context, "No user found for that email.");
-    } else {
-      showAlertDialog(context, "Error Occured");
-    }
-  }
-}
-
-showAlertDialog(BuildContext context, String x) {
-  showCupertinoDialog(
-    context: context,
-    builder: (context) {
-      return CupertinoAlertDialog(
-        title: Text("Alert"),
-        content: Text(x),
-        actions: [
-          CupertinoDialogAction(
-              child: Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-          //  CupertinoDialogAction(
-          //    child: Text("NO"),
-          //    onPressed: (){
-          //      Navigator.of(context).pop();
-          //    }
-          //    ,
-          //  )
-        ],
-      );
-    },
-  );
 }
