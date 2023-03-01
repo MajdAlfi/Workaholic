@@ -6,10 +6,12 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
+import 'package:workout_app/src/Services/Func/checkInternetConnection.dart';
 import 'package:workout_app/src/Services/Others/color.dart';
 import 'package:workout_app/src/Services/Others/dataProvider.dart';
 import 'package:workout_app/src/Services/Others/height&width.dart';
 import 'package:workout_app/src/Services/Auth/signUpFunc.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showAlertDialog.dart';
 
 class Signup extends StatelessWidget {
   const Signup({Key? key}) : super(key: key);
@@ -175,9 +177,14 @@ class Signup extends StatelessWidget {
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15),
                             ),
-                            onPressed: () {
-                              signupFunc(
-                                  context, nameField, emailField, passField);
+                            onPressed: () async {
+                              if (await checkInternetConnection() == true) {
+                                signupFunc(
+                                    context, nameField, emailField, passField);
+                              } else {
+                                showAlertDialog(context,
+                                    'Please Connect to the internet to Signup');
+                              }
                             },
                           ),
                         ))

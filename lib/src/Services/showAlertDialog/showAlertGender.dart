@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
+import 'package:workout_app/src/Services/Func/checkInternetConnection.dart';
 import 'package:workout_app/src/Services/Others/color.dart';
 import 'package:workout_app/src/Services/Others/dataProvider.dart';
 import 'package:workout_app/src/Services/Others/height&width.dart';
@@ -50,51 +51,58 @@ showAlertDialogGender(BuildContext context, uid) {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       dropdownColor: gr(),
                       onChanged: (String? newValue) async {
-                        DefaultG = newValue!;
-                        var level =
-                            context.read<dataProvider>().theLevel.toString();
-                        if (DefaultG != 'Select your Gender' &&
-                            DefaultG !=
-                                context.read<dataProvider>().theGender) {
-                          await fire
-                              .collection('Users')
-                              .doc(uid)
-                              .update({'Gender': DefaultG});
-                          Provider.of<dataProvider>(context, listen: false)
-                              .updateGender(DefaultG);
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          if (DefaultG == 'Male') {
-                            fire.collection('Users').doc(uid).update({
-                              'Level': int.parse(
-                                  '${level.substring(0, 1)}1${level.substring(2)}')
-                            });
-                            prefs.setInt(
-                                'Level',
-                                int.parse(
-                                    '${level.substring(0, 1)}1${level.substring(2)}'));
+                        if (await checkInternetConnection() == true) {
+                          DefaultG = newValue!;
+                          var level =
+                              context.read<dataProvider>().theLevel.toString();
+                          if (DefaultG != 'Select your Gender' &&
+                              DefaultG !=
+                                  context.read<dataProvider>().theGender) {
+                            await fire
+                                .collection('Users')
+                                .doc(uid)
+                                .update({'Gender': DefaultG});
                             Provider.of<dataProvider>(context, listen: false)
-                                .uploadLevel(int.parse(
-                                    '${level.substring(0, 1)}1${level.substring(2)}'));
-                          } else {
-                            fire.collection('Users').doc(uid).update({
-                              'Level': int.parse(
-                                  '${level.substring(0, 1)}2${level.substring(2)}')
-                            });
-                            prefs.setInt(
-                                'Level',
-                                int.parse(
-                                    '${level.substring(0, 1)}2${level.substring(2)}'));
-                            Provider.of<dataProvider>(context, listen: false)
-                                .uploadLevel(int.parse(
-                                    '${level.substring(0, 1)}2${level.substring(2)}'));
-                          }
-                          print(prefs.getInt('Level'));
+                                .updateGender(DefaultG);
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            if (DefaultG == 'Male') {
+                              fire.collection('Users').doc(uid).update({
+                                'Level': int.parse(
+                                    '${level.substring(0, 1)}1${level.substring(2)}')
+                              });
+                              prefs.setInt(
+                                  'Level',
+                                  int.parse(
+                                      '${level.substring(0, 1)}1${level.substring(2)}'));
+                              Provider.of<dataProvider>(context, listen: false)
+                                  .uploadLevel(int.parse(
+                                      '${level.substring(0, 1)}1${level.substring(2)}'));
+                            } else {
+                              fire.collection('Users').doc(uid).update({
+                                'Level': int.parse(
+                                    '${level.substring(0, 1)}2${level.substring(2)}')
+                              });
+                              prefs.setInt(
+                                  'Level',
+                                  int.parse(
+                                      '${level.substring(0, 1)}2${level.substring(2)}'));
+                              Provider.of<dataProvider>(context, listen: false)
+                                  .uploadLevel(int.parse(
+                                      '${level.substring(0, 1)}2${level.substring(2)}'));
+                            }
+                            print(prefs.getInt('Level'));
 
-                          Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          } else {
+                            Navigator.of(context).pop();
+                            showAlertDialog(
+                                context, 'Please select a new Value');
+                          }
                         } else {
-                          Navigator.of(context).pop();
-                          showAlertDialog(context, 'Please select a new Value');
+                          Navigator.pop(context);
+                          showAlertDialog(context,
+                              'Please Connect to the intenet to update data');
                         }
                       }),
                 )),

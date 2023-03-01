@@ -2,11 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
 import 'package:workout_app/main.dart';
 import 'package:workout_app/src/Services/Auth/Signup&LoginFunc.dart';
+import 'package:workout_app/src/Services/Func/checkInternetConnection.dart';
 import 'package:workout_app/src/Services/Others/color.dart';
 import 'package:workout_app/src/Services/Others/height&width.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showAlertDialog.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showLoadingDIalog.dart';
 
 class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
@@ -146,8 +150,16 @@ class Login extends StatelessWidget {
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15),
                             ),
-                            onPressed: () {
-                              loginFunc(context, emailField, passwordField);
+                            onPressed: () async {
+                              if (await checkInternetConnection() == true) {
+                                showAlertLoading(context);
+                                await loginFunc(
+                                        context, emailField, passwordField)
+                                    .then((_) => Navigator.pop(context));
+                              } else {
+                                showAlertDialog(context,
+                                    'Please Connect to the internet to login ');
+                              }
                             },
                           ),
                         )),

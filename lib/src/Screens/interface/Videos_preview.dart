@@ -1,25 +1,17 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workout_app/src/Models/dataModel.dart';
-import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
 import 'package:workout_app/src/Screens/interface/Streak.dart';
-import 'package:workout_app/src/Screens/interface/desc.dart';
 import 'package:workout_app/src/Services/Auth/SignupSer.dart';
 import 'package:workout_app/src/Services/Func/checkDay.dart';
-import 'package:workout_app/src/Services/Func/getLvl.dart';
+import 'package:workout_app/src/Services/Func/checkInternetConnection.dart';
 import 'package:workout_app/src/Services/Func/getTheDate.dart';
 import 'package:workout_app/src/Services/Func/getTheName.dart';
 import 'package:workout_app/src/Services/Func/nameValue.dart';
-import 'package:workout_app/src/Services/Func/setLvl.dart';
+import 'package:workout_app/src/Services/Func/loadLevel.dart';
 import 'package:workout_app/src/Services/Func/streakGet.dart';
 import 'package:workout_app/src/Services/Others/color.dart';
 import 'package:workout_app/src/Services/Others/dataProvider.dart';
@@ -45,7 +37,7 @@ class _vidsState extends State<vids> {
       getTheName(uid, context);
       streakGet(widget.fireStoreH, uid.toString(), context);
       _loadCounter();
-      _loadLevel(uid);
+      loadLevel(uid, context);
     });
     // final docData = FirebaseFirestore.instance
     //   .collection('Levels')
@@ -57,7 +49,7 @@ class _vidsState extends State<vids> {
     super.dispose();
     setState(() {
       _loadCounter();
-      _loadLevel(context);
+      loadLevel(uid, context);
 
       getTheName(uid, context);
     });
@@ -69,21 +61,6 @@ class _vidsState extends State<vids> {
       Provider.of<dataProvider>(context, listen: false)
           .changeTheDay(prefs.getInt('counter') ?? 1);
     });
-  }
-
-  _loadLevel(uid) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    if (prefs.getInt('Level') != null) {
-      int digit = await getLvl();
-      Provider.of<dataProvider>(context, listen: false).uploadLevel(digit);
-      print('digit1:$digit');
-    } else {
-      await setLvl(context, uid);
-      int digit = await getLvl();
-      Provider.of<dataProvider>(context, listen: false).uploadLevel(digit);
-      print('digit2:$digit');
-    }
   }
 
   Widget build(BuildContext context) {
@@ -176,45 +153,51 @@ class _vidsState extends State<vids> {
                       ),
                       child: TextButton(
                           onPressed: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
+                            if (await checkInternetConnection() == true) {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
 
-                            if (await getTheDate(prefs) == true) {
-                              prefs.setBool('bool', true);
-                            }
-                            if (prefs.getBool('bool') == true) {
-                              if (_counter != null) {
-                                if (await showAlertDialogComplete(context,
-                                        'Are you sure you completed the entire workout?') ==
-                                    true) {
-                                  setState(() {
-                                    checkDay(_counter, context);
+                              if (await getTheDate(prefs) == true) {
+                                prefs.setBool('bool', true);
+                              }
+                              if (prefs.getBool('bool') == true) {
+                                if (_counter != null) {
+                                  if (await showAlertDialogComplete(context,
+                                          'Are you sure you completed the entire workout?') ==
+                                      true) {
+                                    setState(() {
+                                      checkDay(_counter, context);
 
-                                    fire.collection('Users').doc(Uid).update({
-                                      'Streak': (context
-                                              .read<dataProvider>()
-                                              .theStreak! +
-                                          1)
-                                    });
-                                    Provider.of<dataProvider>(context,
-                                            listen: false)
-                                        .ExtraDataStreak(context
+                                      fire.collection('Users').doc(Uid).update({
+                                        'Streak': (context
                                                 .read<dataProvider>()
                                                 .theStreak! +
-                                            1);
-                                    prefs.setBool('bool', false);
-                                  });
+                                            1)
+                                      });
+                                      Provider.of<dataProvider>(context,
+                                              listen: false)
+                                          .ExtraDataStreak(context
+                                                  .read<dataProvider>()
+                                                  .theStreak! +
+                                              1);
+                                      prefs.setBool('bool', false);
+                                    });
 
-                                  DateTime now = DateTime.now();
-                                  prefs.setString(
-                                      'Tmr',
-                                      DateTime(now.year, now.month, now.day + 1)
-                                          .toString());
+                                    DateTime now = DateTime.now();
+                                    prefs.setString(
+                                        'Tmr',
+                                        DateTime(now.year, now.month,
+                                                now.day + 1)
+                                            .toString());
+                                  }
                                 }
+                              } else {
+                                showAlertDialog(
+                                    context, 'Please come back tomowrow');
                               }
                             } else {
-                              showAlertDialog(
-                                  context, 'Please come back tomowrow');
+                              showAlertDialog(context,
+                                  'Please Connect the the internet to move to the next day');
                             }
                           },
                           child: Text(

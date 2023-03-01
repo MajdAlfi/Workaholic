@@ -5,10 +5,12 @@ import 'package:workout_app/src/Screens/Auth/Signup.dart';
 import 'package:workout_app/src/Screens/Data/DataCollector1.dart';
 import 'package:workout_app/src/Services/Auth/Signup&LoginFunc.dart';
 import 'package:workout_app/src/Services/Auth/SignupSer.dart';
+import 'package:workout_app/src/Services/Func/checkInternetConnection.dart';
 import 'package:workout_app/src/Services/Others/color.dart';
 import 'package:workout_app/src/Services/Others/dataProvider.dart';
 import 'package:workout_app/src/Services/Others/height&width.dart';
 import 'package:workout_app/src/Services/showAlertDialog/showAlertDialog.dart';
+import 'package:workout_app/src/Services/showAlertDialog/showLoadingDIalog.dart';
 
 class DataCollector2 extends StatefulWidget {
   @override
@@ -155,45 +157,66 @@ class _DataCollector2State extends State<DataCollector2> {
                       color: gr()),
                   child: TextButton(
                       onPressed: () async {
-                        //     showAlertLoading(context);
-                        if (DefaultG != "Select your Goal" &&
-                            DefaultE != "Select your Experience Level") {
-                          Provider.of<dataProvider>(context, listen: false)
-                              .uploadSecondData(
-                                  DefaultG.toString(), DefaultE.toString(), 1);
-                          Provider.of<dataProvider>(context, listen: false)
-                              .changeTheDay(1);
-                          await signupAuth(
-                              context,
-                              context.read<dataProvider>().theName.toString(),
-                              context.read<dataProvider>().theEmail.toString(),
-                              context.read<dataProvider>().thePass.toString(),
-                              int.parse(context
-                                  .read<dataProvider>()
-                                  .theAge
-                                  .toString()),
-                              int.parse(context
-                                  .read<dataProvider>()
-                                  .theWeight
-                                  .toString()),
-                              int.parse(context
-                                  .read<dataProvider>()
-                                  .theHeight
-                                  .toString()),
-                              int.parse(context
-                                  .read<dataProvider>()
-                                  .theLevel
-                                  .toString()),
-                              context.read<dataProvider>().theGender.toString(),
-                              context.read<dataProvider>().theGoal.toString(),
-                              context
-                                  .read<dataProvider>()
-                                  .theExperience
-                                  .toString());
-                          //      Navigator.pop(context);
+                        if (await checkInternetConnection() == true) {
+                          //     showAlertLoading(context);
+                          if (DefaultG != "Select your Goal" &&
+                              DefaultE != "Select your Experience Level") {
+                            showAlertLoading(context);
+                            Provider.of<dataProvider>(context, listen: false)
+                                .uploadSecondData(DefaultG.toString(),
+                                    DefaultE.toString(), 1);
+                            Provider.of<dataProvider>(context, listen: false)
+                                .changeTheDay(1);
+                            await signupAuth(
+                                    context,
+                                    context
+                                        .read<dataProvider>()
+                                        .theName
+                                        .toString(),
+                                    context
+                                        .read<dataProvider>()
+                                        .theEmail
+                                        .toString(),
+                                    context
+                                        .read<dataProvider>()
+                                        .thePass
+                                        .toString(),
+                                    int.parse(context
+                                        .read<dataProvider>()
+                                        .theAge
+                                        .toString()),
+                                    int.parse(context
+                                        .read<dataProvider>()
+                                        .theWeight
+                                        .toString()),
+                                    int.parse(context
+                                        .read<dataProvider>()
+                                        .theHeight
+                                        .toString()),
+                                    int.parse(context
+                                        .read<dataProvider>()
+                                        .theLevel
+                                        .toString()),
+                                    context
+                                        .read<dataProvider>()
+                                        .theGender
+                                        .toString(),
+                                    context
+                                        .read<dataProvider>()
+                                        .theGoal
+                                        .toString(),
+                                    context
+                                        .read<dataProvider>()
+                                        .theExperience
+                                        .toString())
+                                .then((_) => Navigator.pop(context));
+                          } else {
+                            showAlertDialog(context,
+                                'Please select Your Goal and Experience');
+                          }
                         } else {
                           showAlertDialog(context,
-                              'Please select Your Goal and Experience');
+                              'Please Connect to the internet to Signup');
                         }
                       },
                       child: Text(

@@ -12,6 +12,7 @@ import 'package:workout_app/src/Screens/interface/desc.dart';
 import 'package:workout_app/src/Services/Auth/SignupSer.dart';
 import 'package:workout_app/src/Services/Data%20Handling/analyze.dart';
 import 'package:workout_app/src/Services/Data%20Handling/checkIfUpgradable.dart';
+import 'package:workout_app/src/Services/Func/checkInternetConnection.dart';
 import 'package:workout_app/src/Services/Others/color.dart';
 import 'package:workout_app/src/Services/Others/dataProvider.dart';
 import 'package:workout_app/src/Services/Others/height&width.dart';
@@ -52,21 +53,28 @@ class _SettingsState extends State<Settings> {
         actions: [
           TextButton(
               onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                setState(() {
-                  prefs.remove('uid');
-                  prefs.remove('counter');
-                  prefs.remove('where');
-                  prefs.remove('Level');
-                  prefs.remove('Tmr');
-                  prefs.remove('bool');
-                  prefs.clear();
-                  Provider.of<dataProvider>(context, listen: false)
-                      .changeTheDay(1);
-                  Provider.of<dataProvider>(context, listen: false).deleteAll();
-                  FirebaseAuth.instance.signOut();
-                  Navigator.pushReplacementNamed(context, '/Login');
-                });
+                if (await checkInternetConnection() == true) {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(() {
+                    prefs.remove('uid');
+                    prefs.remove('counter');
+                    prefs.remove('where');
+                    prefs.remove('Level');
+                    prefs.remove('Tmr');
+                    prefs.remove('bool');
+                    prefs.clear();
+                    Provider.of<dataProvider>(context, listen: false)
+                        .changeTheDay(1);
+                    Provider.of<dataProvider>(context, listen: false)
+                        .deleteAll();
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacementNamed(context, '/Login');
+                  });
+                } else {
+                  showAlertDialog(
+                      context, 'Please Connect to the intenet to Signout');
+                }
               },
               child: Container(
                 height: 30,
@@ -177,10 +185,15 @@ class _SettingsState extends State<Settings> {
           SizedBox(
               width: 300,
               child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      checkIfUpgradable(context, uid);
-                    });
+                  onPressed: () async {
+                    if (await checkInternetConnection() == true) {
+                      setState(() {
+                        checkIfUpgradable(context, uid);
+                      });
+                    } else {
+                      showAlertDialog(
+                          context, 'Please Connect to the intenet to Upgrade');
+                    }
                   },
                   child: Text(
                     'UPGRADE into more advanced exercise program',
@@ -216,17 +229,24 @@ Widget Cont(String name, dynamic value, BuildContext context, String x,
                   borderRadius: BorderRadius.all(Radius.circular(15)),
                   color: Colors.white),
               child: TextButton(
-                  onPressed: () {
-                    if (name == 'Age' || name == 'Weight' || name == 'Height') {
-                      showAlertDialogSettings(context, txt, uid);
-                    } else if (name == 'Gender') {
-                      showAlertDialogGender(context, uid);
-                    } else if (name == 'Goal') {
-                      showAlertDialogGoal(context, uid);
-                    } else if (name == 'Experience') {
-                      //showAlertDialogExp(context, uid);
+                  onPressed: () async {
+                    if (await checkInternetConnection() == true) {
+                      if (name == 'Age' ||
+                          name == 'Weight' ||
+                          name == 'Height') {
+                        showAlertDialogSettings(context, txt, uid);
+                      } else if (name == 'Gender') {
+                        showAlertDialogGender(context, uid);
+                      } else if (name == 'Goal') {
+                        showAlertDialogGoal(context, uid);
+                      } else if (name == 'Experience') {
+                        //showAlertDialogExp(context, uid);
+                        showAlertDialog(context,
+                            "You can't change your Experience Level as it will be considered cheating. for more info contact the developer");
+                      }
+                    } else {
                       showAlertDialog(context,
-                          "You can't change your Experience Level as it will be considered cheating. for more info contact the developer");
+                          'Please Connect to the internet to update data');
                     }
                   },
                   child: Text("Change")),

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workout_app/src/Services/Func/checkInternetConnection.dart';
 import 'package:workout_app/src/Services/Others/color.dart';
 import 'package:workout_app/src/Services/Others/dataProvider.dart';
 import 'package:workout_app/src/Services/Others/height&width.dart';
@@ -51,64 +52,70 @@ showAlertDialogGoal(BuildContext context, uid) {
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                     dropdownColor: gr(),
                     onChanged: (String? newValue) async {
-                      DefaultG = newValue!;
-                      var level =
-                          context.read<dataProvider>().theLevel.toString();
-                      if (DefaultG != 'Select your Goal' &&
-                          DefaultG != context.read<dataProvider>().theGoal) {
-                        await fire
-                            .collection('Users')
-                            .doc(uid)
-                            .update({'Goal': DefaultG});
-                        Provider.of<dataProvider>(context, listen: false)
-                            .updateGoal(DefaultG);
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        if (DefaultG == 'Body Building') {
-                          fire.collection('Users').doc(uid).update({
-                            'Level': int.parse(
-                                '${level.substring(0, 2)}1${level.substring(3)}')
-                          });
-                          prefs.setInt(
-                              'Level',
-                              int.parse(
-                                  '${level.substring(0, 2)}1${level.substring(3)}'));
+                      if (await checkInternetConnection() == true) {
+                        DefaultG = newValue!;
+                        var level =
+                            context.read<dataProvider>().theLevel.toString();
+                        if (DefaultG != 'Select your Goal' &&
+                            DefaultG != context.read<dataProvider>().theGoal) {
+                          await fire
+                              .collection('Users')
+                              .doc(uid)
+                              .update({'Goal': DefaultG});
                           Provider.of<dataProvider>(context, listen: false)
-                              .uploadLevel(int.parse(
-                                  '${level.substring(0, 2)}1${level.substring(3)}'));
-                        } else if (DefaultG == 'Weight Loss') {
-                          fire.collection('Users').doc(uid).update({
-                            'Level': int.parse(
-                                '${level.substring(0, 2)}2${level.substring(3)}')
-                          });
-                          prefs.setInt(
-                              'Level',
-                              int.parse(
-                                  '${level.substring(0, 2)}2${level.substring(3)}'));
+                              .updateGoal(DefaultG);
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          if (DefaultG == 'Body Building') {
+                            fire.collection('Users').doc(uid).update({
+                              'Level': int.parse(
+                                  '${level.substring(0, 2)}1${level.substring(3)}')
+                            });
+                            prefs.setInt(
+                                'Level',
+                                int.parse(
+                                    '${level.substring(0, 2)}1${level.substring(3)}'));
+                            Provider.of<dataProvider>(context, listen: false)
+                                .uploadLevel(int.parse(
+                                    '${level.substring(0, 2)}1${level.substring(3)}'));
+                          } else if (DefaultG == 'Weight Loss') {
+                            fire.collection('Users').doc(uid).update({
+                              'Level': int.parse(
+                                  '${level.substring(0, 2)}2${level.substring(3)}')
+                            });
+                            prefs.setInt(
+                                'Level',
+                                int.parse(
+                                    '${level.substring(0, 2)}2${level.substring(3)}'));
+                            Provider.of<dataProvider>(context, listen: false)
+                                .uploadLevel(int.parse(
+                                    '${level.substring(0, 2)}2${level.substring(3)}'));
+                          } else {
+                            fire.collection('Users').doc(uid).update({
+                              'Level': int.parse(
+                                  '${level.substring(0, 2)}3${level.substring(3)}')
+                            });
+                            prefs.setInt(
+                                'Level',
+                                int.parse(
+                                    '${level.substring(0, 2)}3${level.substring(3)}'));
+                            Provider.of<dataProvider>(context, listen: false)
+                                .uploadLevel(int.parse(
+                                    '${level.substring(0, 2)}3${level.substring(3)}'));
+                          }
+                          print(prefs.getInt('Level'));
                           Provider.of<dataProvider>(context, listen: false)
-                              .uploadLevel(int.parse(
-                                  '${level.substring(0, 2)}2${level.substring(3)}'));
+                              .uploadLevel(
+                                  int.parse(prefs.getInt('Level').toString()));
+                          Navigator.of(context).pop();
                         } else {
-                          fire.collection('Users').doc(uid).update({
-                            'Level': int.parse(
-                                '${level.substring(0, 2)}3${level.substring(3)}')
-                          });
-                          prefs.setInt(
-                              'Level',
-                              int.parse(
-                                  '${level.substring(0, 2)}3${level.substring(3)}'));
-                          Provider.of<dataProvider>(context, listen: false)
-                              .uploadLevel(int.parse(
-                                  '${level.substring(0, 2)}3${level.substring(3)}'));
+                          Navigator.of(context).pop();
+                          showAlertDialog(context, 'Please select a new Value');
                         }
-                        print(prefs.getInt('Level'));
-                        Provider.of<dataProvider>(context, listen: false)
-                            .uploadLevel(
-                                int.parse(prefs.getInt('Level').toString()));
-                        Navigator.of(context).pop();
                       } else {
-                        Navigator.of(context).pop();
-                        showAlertDialog(context, 'Please select a new Value');
+                        Navigator.pop(context);
+                        showAlertDialog(context,
+                            'Please Connect to the intenet to update data');
                       }
                     }),
               )),
