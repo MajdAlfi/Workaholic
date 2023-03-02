@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/src/Services/Others/dataProvider.dart';
 
 streakGet(FirebaseFirestore fire, String Uid, BuildContext context) async {
-  Future streakData =
-      fire.collection('Users').doc(Uid).get().then((DocumentSnapshot value) {
+  final streakData = await fire
+      .collection('Users')
+      .doc(Uid)
+      .get()
+      .then((DocumentSnapshot value) {
     if (value.exists) {
       return value.get('Streak');
     }

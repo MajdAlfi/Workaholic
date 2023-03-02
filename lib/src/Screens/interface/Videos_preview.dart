@@ -108,7 +108,8 @@ class _vidsState extends State<vids> {
                 //     streakGet(fire, Uid.toString(), context);
 
                 return TextButton(
-                  child: Text("${context.watch<dataProvider>().theStreak}🔥",
+                  child: Text(
+                      "${(context.watch<dataProvider>().theStreak != null) ? context.watch<dataProvider>().theStreak : 0}🔥",
                       style:
                           TextStyle(color: gr(), fontWeight: FontWeight.bold)),
                   onPressed: () {
@@ -131,14 +132,19 @@ class _vidsState extends State<vids> {
               Row(
                 children: [
                   Text(
-                    "Day $_counter || ",
+                    "Day ${(_counter != null) ? _counter : ''}|| ",
                     style: TextStyle(color: gr(), fontWeight: FontWeight.bold),
                   ),
                   FutureBuilder(
                       future: nameValue(context),
                       builder: (context, snapshot) {
                         return Text(
-                          context.read<dataProvider>().theDayName.toString(),
+                          (context.read<dataProvider>().theDayName != null)
+                              ? context
+                                  .read<dataProvider>()
+                                  .theDayName
+                                  .toString()
+                              : '',
                           style: TextStyle(
                               color: gr(), fontWeight: FontWeight.bold),
                         );

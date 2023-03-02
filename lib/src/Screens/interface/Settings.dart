@@ -137,7 +137,9 @@ class _SettingsState extends State<Settings> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 15.0),
                       child: Text(
-                        context.read<dataProvider>().theName.toString(),
+                        (context.read<dataProvider>().theName != null)
+                            ? context.read<dataProvider>().theName.toString()
+                            : '',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 25,
@@ -216,7 +218,7 @@ Widget Cont(String name, dynamic value, BuildContext context, String x,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "$name: $value",
+              "$name: ${(value != null) ? value : ''} ",
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: size,

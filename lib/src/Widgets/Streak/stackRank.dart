@@ -34,7 +34,9 @@ Widget stackRank(BuildContext context, widthScr, int rank,
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
-              context.read<dataProvider>().theName.toString(),
+              (context.read<dataProvider>().theName.toString().isNotEmpty)
+                  ? context.watch<dataProvider>().theName.toString()
+                  : '',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,

@@ -72,8 +72,16 @@ class _StreakState extends State<Streak> {
                       return stackRank(
                           context,
                           widthScr,
-                          int.parse(
-                              context.watch<dataProvider>().theRank.toString()),
+                          (context
+                                  .watch<dataProvider>()
+                                  .theRank
+                                  .toString()
+                                  .isNotEmpty)
+                              ? int.parse(context
+                                  .watch<dataProvider>()
+                                  .theRank
+                                  .toString())
+                              : 0,
                           widget._scrollController);
                     }
                     return Text('Uknown Error');

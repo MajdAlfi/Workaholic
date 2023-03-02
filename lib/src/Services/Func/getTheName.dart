@@ -15,7 +15,7 @@ getTheName(uid, BuildContext context) async {
   });
   if (USERData != null) {
     userData dataX = await USERData;
-    Provider.of<dataProvider>(context, listen: false).regularUse(
+    await Provider.of<dataProvider>(context, listen: false).regularUse(
         uid,
         dataX.Name,
         dataX.Email,
