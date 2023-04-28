@@ -72,6 +72,7 @@ class Signup extends StatelessWidget {
                         )),
                     Positioned(
                       top: (heightScr(context, 50)) - 160,
+                      left: 20,
                       child: Text(
                         "SignUp",
                         style: TextStyle(

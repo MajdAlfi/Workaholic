@@ -22,6 +22,8 @@ class dataProvider<userData> with ChangeNotifier {
   int? theDay;
   String? theDayName;
   bool? theAdmin;
+  DateTime? NotDate;
+
   changeDataPro<userData>(String Name, String Email, String Pass) {
     theName = Name;
     theEmail = Email;
@@ -152,6 +154,11 @@ class dataProvider<userData> with ChangeNotifier {
     theLevel = null;
     theDayName = null;
     theAdmin = null;
+    notifyListeners();
+  }
+
+  setNotifcationDate(DateTime date) {
+    NotDate = date;
     notifyListeners();
   }
 }

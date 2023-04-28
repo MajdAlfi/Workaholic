@@ -34,10 +34,10 @@ class Login extends StatelessWidget {
               height: 35,
               width: 80,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   color: gr()),
               child: TextButton(
-                child: Text(
+                child: const Text(
                   "SignUp",
                   style: TextStyle(
                       color: Colors.white,
@@ -57,7 +57,7 @@ class Login extends StatelessWidget {
                 width: widthScr(context, 90),
                 decoration: BoxDecoration(
                     color: gr(),
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(500),
                     )),
                 child: Stack(
@@ -73,7 +73,8 @@ class Login extends StatelessWidget {
                         )),
                     Positioned(
                       top: (heightScr(context, 50)) - 100,
-                      child: Text(
+                      left: 20,
+                      child: const Text(
                         "Login",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -93,7 +94,7 @@ class Login extends StatelessWidget {
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                     width: 0, style: BorderStyle.none),
                               ),
                               filled: true,
@@ -119,7 +120,7 @@ class Login extends StatelessWidget {
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                     width: 0, style: BorderStyle.none),
                               ),
                               filled: true,
@@ -138,7 +139,7 @@ class Login extends StatelessWidget {
                         child: Container(
                           height: 35,
                           width: 80,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
                               color: Colors.white),
@@ -170,7 +171,7 @@ class Login extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pushNamed('/Forgot');
                           },
-                          child: Text(
+                          child: const Text(
                             'Forgot your password?',
                             style: TextStyle(color: Colors.white),
                           )),

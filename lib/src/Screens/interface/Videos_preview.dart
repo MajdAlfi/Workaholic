@@ -13,6 +13,8 @@ import 'package:workout_app/src/Services/Func/getTheName.dart';
 import 'package:workout_app/src/Services/Func/nameValue.dart';
 import 'package:workout_app/src/Services/Func/loadLevel.dart';
 import 'package:workout_app/src/Services/Func/streakGet.dart';
+import 'package:workout_app/src/Services/Notifications/notiicationInIt.dart';
+import 'package:workout_app/src/Services/Notifications/theNotification.dart';
 import 'package:workout_app/src/Services/Others/color.dart';
 import 'package:workout_app/src/Services/Others/dataProvider.dart';
 import 'package:workout_app/src/Services/Others/height&width.dart';
@@ -27,7 +29,9 @@ class vids extends StatefulWidget {
 }
 
 class _vidsState extends State<vids> {
+  @override
   void initState() {
+    // TODO: implement initState
     super.initState();
 
     final FirebaseAuth auth = FirebaseAuth.instance;
